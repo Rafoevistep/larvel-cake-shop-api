@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\CategoryController;
+use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Http\Request;
@@ -23,18 +25,33 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
-], function ($router) {
+],function ($router) {
     Route::controller(AuthController::class)->group(function() {
         Route::post('/login','login');
         Route::post('/register','register');
         Route::post('/logout','logout')->middleware('auth:sanctum');
-        // Route::get('/user-profile','userProfile');
         Route::get('/user','user')->middleware('auth:sanctum');
-
     });
 });
-// Route::get('/auth/user',[AuthController::class,'user'])->middleware('auth:sanctum');
+
 Route::post('/profile/change-password',[ProfileController::class,'change_password'])->middleware('auth:sanctum');
 Route::post('/profile/update-profile',[ProfileController::class,'update_profile'])->middleware('auth:sanctum');
 
 
+Route::group([
+    'middleware' => 'admin',
+    'prefix' => 'admin'
+],function () {
+    Route::controller(UserController::class)->group(function(){
+        Route::get('/user', 'index');
+        Route::put('/update-profile/{user}','update_profile');
+        Route::get('/user/{user}','show');
+    });
+    Route::controller(CategoryController::class)->group(function(){
+        Route::get('/categoty', 'index');
+        Route::get('/categoty/{categoty}', 'show');
+        Route::post('/categoty','store');
+        Route::put('/categoty/{categoty}', 'update');
+        Route::delete('/categoty/{categoty}', 'destroy');
+    });
+});
