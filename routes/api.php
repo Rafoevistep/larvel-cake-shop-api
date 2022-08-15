@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\User\CartController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,21 +34,33 @@ Route::group([
         Route::post('/logout','logout')->middleware('auth:sanctum');
         Route::get('/user','user')->middleware('auth:sanctum');
     });
+    Route::controller(CartController::class)->group(function() {
+        Route::post('/cart/{product}','store');
+        Route::get('/cart','index');
+        Route::delete('/cart/{product}', 'destroy');
+    });
+});
+
+Route::controller(ProductController::class)->group(function() {
+    Route::get('/products', 'index');
+    Route::get('/products/{product}', 'show');;
 });
 
 Route::post('/profile/change-password',[ProfileController::class,'change_password'])->middleware('auth:sanctum');
 Route::post('/profile/update-profile',[ProfileController::class,'update_profile'])->middleware('auth:sanctum');
 
-
+//Route Vor Admin Minddlware
 Route::group([
     'middleware' => 'admin',
     'prefix' => 'admin'
 ],function () {
+
     Route::controller(UserController::class)->group(function(){
         Route::get('/user', 'index');
         Route::put('/update-profile/{user}','update_profile');
         Route::get('/user/{user}','show');
     });
+
     Route::controller(CategoryController::class)->group(function(){
         Route::get('/categoty', 'index');
         Route::get('/categoty/{categoty}', 'show');
@@ -55,6 +68,7 @@ Route::group([
         Route::put('/categoty/{categoty}', 'update');
         Route::delete('/categoty/{categoty}', 'destroy');
     });
+
     Route::controller(ProductController::class)->group(function() {
         Route::get('/products', 'index');
         Route::get('/products/{product}', 'show');
@@ -62,4 +76,5 @@ Route::group([
         Route::put('/products/{product}', 'update');
         Route::delete('/products/{product}', 'destroy');
     });
+
 });

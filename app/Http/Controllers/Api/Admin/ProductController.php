@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Requests\ProductStoreRequest;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -71,7 +72,7 @@ class ProductController extends Controller
             $product->name = $request->name;
             $product->price = $request->price;
             $product->description = $request->description;
-            $product->category_id = $request->category_id;
+            $product->category_id= $request->category_id;
 
             if($request->image) {
                 // Public storage
@@ -108,8 +109,7 @@ class ProductController extends Controller
           ],404);
         }
 
-
-            // Public storage
+        // Public storage
         $storage = Storage::disk('public');
 
         // Iamge delete

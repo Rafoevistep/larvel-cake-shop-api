@@ -20,7 +20,7 @@ class ProductStoreRequest extends FormRequest
                     'price' => 'integer|min:1',
                     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                     'description' => 'required|string',
-                    'category_id'=> 'required|string'
+                    'category_id'=> 'required|integer|exists:App\Models\Category,id'
                 ];
             } else {
                 return [
@@ -28,7 +28,7 @@ class ProductStoreRequest extends FormRequest
                     'price' => 'integer|min:1',
                     'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                     'description' => 'required|string',
-                    'category_id'=> 'required|string'
+                    'category_id'=> 'required|integer|exists:App\Models\Category,id'
                 ];
             }
         }
@@ -46,8 +46,8 @@ class ProductStoreRequest extends FormRequest
                 return [
                     'name.required' => 'Name is required!',
                     'description.required' => 'Descritpion is required!',
-                    'category_id' => 'Category id is required',
                     'image.required' => 'Image is required!',
+                    'category_id' => 'Category id is required'
                 ];
             }
         }
