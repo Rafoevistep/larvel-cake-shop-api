@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\UserController;
+use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Http\Request;
@@ -53,5 +54,12 @@ Route::group([
         Route::post('/categoty','store');
         Route::put('/categoty/{categoty}', 'update');
         Route::delete('/categoty/{categoty}', 'destroy');
+    });
+    Route::controller(ProductController::class)->group(function() {
+        Route::get('/products', 'index');
+        Route::get('/products/{product}', 'show');
+        Route::post('/products','store');
+        Route::put('/products/{product}', 'update');
+        Route::delete('/products/{product}', 'destroy');
     });
 });
