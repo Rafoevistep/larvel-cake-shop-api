@@ -10,12 +10,6 @@ use Illuminate\Http\Request;
 class CartController extends Controller
 {
 
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $userId = auth('sanctum')->user()->id;
@@ -32,12 +26,7 @@ class CartController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request, Product $product)
     {
         $userId = auth('sanctum')->user()->id;
@@ -55,54 +44,41 @@ class CartController extends Controller
             'image' => $product->image,
             'price' => $product->price,
             'description' => $product->description,
+            'qty' => $request->qty,
         ]);
 
 
         return response()->json($cart);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id, Product $product)
     {
-        if (auth()->user()->id !== $product->user_id) {
-            return response()->json(['message' => 'Action Forbidden']);
-        }
+        // if (auth()->user()->id !== $product->user_id) {
+        //     return response()->json(['message' => 'Action Forbidden']);
+        // }
 
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id, Cart $cart)
     {
-        //deleting From card
+        //Deleting From cart
 
-        if (auth('sanctum')->user()->id !== $cart->user_id) {
+        if (!auth('sanctum')->user()->id) {
             return response()->json(['message' => 'Action Forbidden']);
         }
+
         
-        $cart->delete();
-        return response()->json(['message' => 'Item Deleted', 'Item' => $cart]);
+        $cart->delete($id);
+        return response()->json(['message' => 'Item Deleted']);
     }
+
 }

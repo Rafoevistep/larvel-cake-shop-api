@@ -21,7 +21,7 @@ class CreateCartsTable extends Migration
             $table->longText('description');
             $table->decimal('price');
             $table->string('image')->nullable();
-            
+            $table->integer('qty')->default(1);
             $table->timestamps();
 
             $table->foreign('product_id')
