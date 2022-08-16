@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AboutUsPageController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\ProductController;
@@ -41,10 +42,21 @@ Route::group([
     });
 });
 
+//--------For users Not Singn in------
 Route::controller(ProductController::class)->group(function() {
     Route::get('/products', 'index');
-    Route::get('/products/{product}', 'show');;
+    Route::get('/products/{product}', 'show');
+    Route::get('search/{name}','search');
 });
+
+Route::controller(CategoryController::class)->group(function(){
+    Route::get('/categoty', 'index');
+    Route::get('/categoty/{categoty}', 'show');
+});
+
+Route::get('/about',[AboutUsPageController::class, 'index']);
+
+//----------
 
 Route::post('/profile/change-password',[ProfileController::class,'change_password'])->middleware('auth:sanctum');
 Route::post('/profile/update-profile',[ProfileController::class,'update_profile'])->middleware('auth:sanctum');
@@ -54,7 +66,6 @@ Route::group([
     'middleware' => 'admin',
     'prefix' => 'admin'
 ],function () {
-
     Route::controller(UserController::class)->group(function(){
         Route::get('/user', 'index');
         Route::put('/update-profile/{user}','update_profile');
@@ -75,6 +86,12 @@ Route::group([
         Route::post('/products','store');
         Route::put('/products/{product}', 'update');
         Route::delete('/products/{product}', 'destroy');
+    });
+
+    Route::controller(AboutUsPageController::class)->group(function(){
+        Route::get('/about', 'index');
+        Route::post('/about','store');
+        Route::delete('/about/{about}', 'destroy');
     });
 
 });

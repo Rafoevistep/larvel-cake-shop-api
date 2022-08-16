@@ -47,7 +47,7 @@ class CartController extends Controller
             'qty' => $request->qty,
         ]);
 
-
+        
         return response()->json($cart);
     }
 
@@ -76,7 +76,7 @@ class CartController extends Controller
             return response()->json(['message' => 'Action Forbidden']);
         }
 
-        
+
         $cart->delete($id);
         return response()->json(['message' => 'Item Deleted']);
     }

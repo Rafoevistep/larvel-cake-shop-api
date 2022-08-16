@@ -124,4 +124,17 @@ class ProductController extends Controller
             'message' => "Product successfully deleted."
         ],200);
     }
+
+    function search($name)
+    {
+        $result = Product::where('name', 'LIKE', '%'. $name. '%')->get();
+        if(count($result)){
+         return Response()->json($result);
+        }
+        else
+        {
+        return response()->json(['Result' => 'No Data not found'], 404);
+      }
+
+    }
 }
