@@ -34,4 +34,11 @@ class Product extends Model
     {
         return $this->hasOne(AvailableProduct::class, 'product_id');
     }
+
+
+    public function orders(){
+
+        return $this->belongsToMany('App\Models\Order');
+
+    }
 }

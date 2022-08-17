@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\User\CartController;
+use App\Http\Controllers\Api\User\EnquiryController;
 use App\Http\Controllers\Api\User\NewsletterControoler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,7 +47,8 @@ Route::group([
         Route::delete('/cart/{product}', 'destroy');
     });
 
-    
+    Route::post('enquary',[EnquiryController::class,'store']);
+
 });
 
 //--------For users Not Singn in-------------------
@@ -122,5 +124,7 @@ Route::group([
         Route::get('/aviable/{aviable}', 'show');
         Route::post('/aviable/{aviable}','store');
     });
+
+    Route::get('enquary',[EnquiryController::class,'index']);
 
 });

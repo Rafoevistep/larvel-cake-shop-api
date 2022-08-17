@@ -37,7 +37,7 @@ class NewsletterControoler extends Controller
                     ]);
             return response()->json(['message' => 'Your Mail Subscriped',$subscripe]);
         }
-
+        $validator->validated();
     }
 
 
