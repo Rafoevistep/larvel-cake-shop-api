@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'products';
 
     protected $fillable =[
@@ -27,5 +27,10 @@ class Product extends Model
     public function product()
     {
         return $this->belongsTo('App\Models\Product');
+    }
+
+    public function AvailableProduct()
+    {
+        return $this->belongsTo('App\Models\AvailableProduct');
     }
 }

@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\Api\Admin\AboutUsPageController;
 use App\Http\Controllers\Api\Admin\CategoryController;
+use App\Http\Controllers\Api\Admin\ContactPageController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\User\CartController;
+use App\Http\Controllers\Api\User\NewsletterControoler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,7 +44,7 @@ Route::group([
     });
 });
 
-//--------For users Not Singn in------
+//--------For users Not Singn in-------------------
 Route::controller(ProductController::class)->group(function() {
     Route::get('/products', 'index');
     Route::get('/products/{product}', 'show');
@@ -55,8 +57,11 @@ Route::controller(CategoryController::class)->group(function(){
 });
 
 Route::get('/about',[AboutUsPageController::class, 'index']);
+Route::get('/contact',[ContactPageController::class, 'index']);
 
-//----------
+Route::post('/subscripe',[NewsletterControoler::class, 'store']);
+
+//------------------------------------
 
 Route::post('/profile/change-password',[ProfileController::class,'change_password'])->middleware('auth:sanctum');
 Route::post('/profile/update-profile',[ProfileController::class,'update_profile'])->middleware('auth:sanctum');
@@ -93,5 +98,15 @@ Route::group([
         Route::post('/about','store');
         Route::delete('/about/{about}', 'destroy');
     });
+
+    Route::controller(ContactPageController::class)->group(function(){
+        Route::get('/contact', 'index');
+        Route::post('/contact','store');
+        Route::delete('/contact/{contact}', 'destroy');
+    });
+
+    Route::get('/subscripe',[NewsletterControoler::class, 'index']);
+
+
 
 });
