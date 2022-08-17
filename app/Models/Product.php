@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -29,8 +30,8 @@ class Product extends Model
         return $this->belongsTo('App\Models\Product');
     }
 
-    public function AvailableProduct()
+    public function availableProduct(): HasOne
     {
-        return $this->belongsTo('App\Models\AvailableProduct');
+        return $this->hasOne(AvailableProduct::class, 'product_id');
     }
 }

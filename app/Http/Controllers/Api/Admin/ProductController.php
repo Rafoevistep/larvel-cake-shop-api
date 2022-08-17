@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Http\Requests\ProductStoreRequest;
+use App\Models\AvailableProduct;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -32,14 +33,22 @@ class ProductController extends Controller
                 'name' => $request->name,
                 'image' => $imageName,
                 'price' => $request->price,
-                'description' => $request->description
+                'description' => $request->description,
+            ]);
+
+            $available = AvailableProduct::create([
+                'product_id' => $product->id,
+                'qty' => $request->qty
             ]);
 
             // Save Image in Storage folder
             Storage::disk('public')->put($imageName, file_get_contents($request->image));
 
             // Return Json Response
-            return response()->json($product, 200);
+            return response()->json([
+                'product' => $product,
+                'product_available' => $available
+            ], 200);
     }
 
     public function show($id)
@@ -52,16 +61,21 @@ class ProductController extends Controller
             ], 404);
         }
 
+        $available = AvailableProduct::find($id);
+
         // Return Json Response
         return response()->json([
-            'product' => $product
+            'product' => $product,
+            'product_available' => $available
         ],200);
+
     }
 
     public function update(ProductStoreRequest $request, $id)
     {
         // Find product
         $product = Product::find($id);
+        $available = AvailableProduct::find($id);
 
         if(!$product){
             return response()->json([
@@ -90,11 +104,15 @@ class ProductController extends Controller
                 $storage->put($imageName, file_get_contents($request->image));
             }
 
+            $available->qty = $request->qty;
+
             // Update Product
             $product->save();
+            $available->save();
 
             return response()->json([
-                $product
+                $product,
+                $available
             ],200);
 
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AboutUsPageController;
+use App\Http\Controllers\Api\Admin\AvailableProductController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\ContactPageController;
 use App\Http\Controllers\Api\Admin\UserController;
@@ -31,17 +32,21 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ],function ($router) {
+
     Route::controller(AuthController::class)->group(function() {
         Route::post('/login','login');
         Route::post('/register','register');
         Route::post('/logout','logout')->middleware('auth:sanctum');
         Route::get('/user','user')->middleware('auth:sanctum');
     });
+
     Route::controller(CartController::class)->group(function() {
         Route::post('/cart/{product}','store');
         Route::get('/cart','index');
         Route::delete('/cart/{product}', 'destroy');
     });
+
+    
 });
 
 //--------For users Not Singn in-------------------
@@ -60,6 +65,11 @@ Route::get('/about',[AboutUsPageController::class, 'index']);
 Route::get('/contact',[ContactPageController::class, 'index']);
 
 Route::post('/subscripe',[NewsletterControoler::class, 'store']);
+
+Route::controller(AvailableProductController::class)->group(function(){
+    Route::get('/aviable','index');
+    Route::get('/aviable/{aviable}', 'show');
+});
 
 //------------------------------------
 
@@ -107,6 +117,10 @@ Route::group([
 
     Route::get('/subscripe',[NewsletterControoler::class, 'index']);
 
-
+    Route::controller(AvailableProductController::class)->group(function(){
+        Route::get('/aviable','index');
+        Route::get('/aviable/{aviable}', 'show');
+        Route::post('/aviable/{aviable}','store');
+    });
 
 });

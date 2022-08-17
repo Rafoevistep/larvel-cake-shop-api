@@ -20,7 +20,8 @@ class ProductStoreRequest extends FormRequest
                     'price' => 'integer|min:1',
                     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                     'description' => 'required|string',
-                    'category_id'=> 'required|integer|exists:App\Models\Category,id'
+                    'category_id'=> 'required|integer|exists:App\Models\Category,id',
+                    'qty'=> 'required|integer|exists:App\Models\AvailableProduct,id'
                 ];
             } else {
                 return [
