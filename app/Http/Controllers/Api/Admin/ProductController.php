@@ -17,9 +17,10 @@ class ProductController extends Controller
        // All Product
        $products = Product::all();
 
+       
        // Return Json Response
        return response()->json([
-          'products' => $products
+          'products' => $products,
        ],200);
     }
 

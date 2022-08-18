@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\User\CartController;
+use App\Http\Controllers\Api\User\OrderController;
 use App\Http\Controllers\Api\User\EnquiryController;
 use App\Http\Controllers\Api\User\NewsletterControoler;
 use Illuminate\Http\Request;
@@ -49,9 +50,20 @@ Route::group([
 
     Route::post('enquary',[EnquiryController::class,'store']);
 
+    Route::controller(OrderController::class)->group(function() {
+        Route::post('/checkout/{cart}','store');
+        Route::get('/myorder','myorder');
+    });
+
 });
 
+Route::post('/profile/change-password',[ProfileController::class,'change_password'])->middleware('auth:sanctum');
+Route::post('/profile/update-profile',[ProfileController::class,'update_profile'])->middleware('auth:sanctum');
+
+
+
 //--------For users Not Singn in-------------------
+
 Route::controller(ProductController::class)->group(function() {
     Route::get('/products', 'index');
     Route::get('/products/{product}', 'show');
@@ -73,10 +85,13 @@ Route::controller(AvailableProductController::class)->group(function(){
     Route::get('/aviable/{aviable}', 'show');
 });
 
+
+Route::get('search/{order}', [OrderController::class,'search' ] );
+
 //------------------------------------
 
-Route::post('/profile/change-password',[ProfileController::class,'change_password'])->middleware('auth:sanctum');
-Route::post('/profile/update-profile',[ProfileController::class,'update_profile'])->middleware('auth:sanctum');
+
+
 
 //Route Vor Admin Minddlware
 Route::group([
@@ -126,5 +141,13 @@ Route::group([
     });
 
     Route::get('enquary',[EnquiryController::class,'index']);
+
+
+    Route::controller(OrderController::class)->group(function() {
+        Route::get('/checkout','index');
+        Route::get('/checkout/{checkout}','show');
+        Route::put('/checkout/{checkout}','update');
+        Route::get('search/{order}','search');
+    });
 
 });

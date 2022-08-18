@@ -47,7 +47,7 @@ class CartController extends Controller
             'qty' => $request->qty,
         ]);
 
-        
+
         return response()->json($cart);
     }
 
@@ -60,25 +60,28 @@ class CartController extends Controller
 
     public function update(Request $request, $id, Product $product)
     {
-        // if (auth()->user()->id !== $product->user_id) {
-        //     return response()->json(['message' => 'Action Forbidden']);
-        // }
 
 
     }
 
 
-    public function destroy($id, Cart $cart)
+    public function destroy($id)
     {
         //Deleting From cart
+          $cart = Cart::find($id);
+          if(!$cart){
+            return response()->json([
+               'message'=>'Product Not Found.'
+            ],404);
+          }
 
-        if (!auth('sanctum')->user()->id) {
-            return response()->json(['message' => 'Action Forbidden']);
-        }
+          // Delete Product
+          $cart->delete();
 
-
-        $cart->delete($id);
+        $cart->delete();
         return response()->json(['message' => 'Item Deleted']);
     }
+
+
 
 }
