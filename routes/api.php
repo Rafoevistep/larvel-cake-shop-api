@@ -67,7 +67,7 @@ Route::post('/profile/update-profile',[ProfileController::class,'update_profile'
 Route::controller(ProductController::class)->group(function() {
     Route::get('/products', 'index');
     Route::get('/products/{product}', 'show');
-    Route::get('search/{name}','search');
+    Route::get('/products/search/{name}','search');
 });
 
 Route::controller(CategoryController::class)->group(function(){
@@ -86,11 +86,9 @@ Route::controller(AvailableProductController::class)->group(function(){
 });
 
 
-Route::get('search/{order}', [OrderController::class,'search' ] );
+Route::get('/order/search/{order}', [OrderController::class,'search' ] );
 
 //------------------------------------
-
-
 
 
 //Route Vor Admin Minddlware
@@ -147,7 +145,6 @@ Route::group([
         Route::get('/checkout','index');
         Route::get('/checkout/{checkout}','show');
         Route::put('/checkout/{checkout}','update');
-        Route::get('search/{order}','search');
     });
 
 });

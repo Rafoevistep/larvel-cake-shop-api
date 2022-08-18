@@ -106,10 +106,10 @@ class OrderController extends Controller
     {
         //User Orders
 
-        $userId = auth('sanctum')->user()->id;
+        $user_id = auth('sanctum')->user()->id;
 
-        $order = Order::where(['user_id' => $userId])->get();
-        $cart_items = Cart::where(['user_id' => $userId])->get();
+        $order = Order::where(['user_id' => $user_id])->get();
+        $cart_items = Cart::where(['user_id' => $user_id])->get();
 
 
         if($order) {
@@ -126,6 +126,7 @@ class OrderController extends Controller
     function search($order)
     {
         $result = Order::where('order_number', 'LIKE', '%'. $order. '%')->get();
+        
         if(count($result)){
          return Response()->json($result);
         }
