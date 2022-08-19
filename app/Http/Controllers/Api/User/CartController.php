@@ -16,12 +16,12 @@ class CartController extends Controller
 
         $cart = Cart::where(['user_id' => $userId])->get();
 
-        if($cart) {
+        if ($cart) {
             return response()->json([
                 'message' => 'Your Cart',
                 'cart' => $cart
             ]);
-        }else{
+        } else {
             return response()->json(['message' => 'Your Cart Is Empty']);
         }
     }
@@ -33,7 +33,7 @@ class CartController extends Controller
 
         $AddCart = Cart::where(['user_id' => $userId, 'product_id' => $product->id])->first();
 
-        if($AddCart) {
+        if ($AddCart) {
             return response()->json(['message' => 'You already Add this product']);;
         }
 
@@ -60,28 +60,23 @@ class CartController extends Controller
 
     public function update(Request $request, $id, Product $product)
     {
-
-
     }
 
 
     public function destroy($id)
     {
         //Deleting From cart
-          $cart = Cart::find($id);
-          if(!$cart){
+        $cart = Cart::find($id);
+        if (!$cart) {
             return response()->json([
-               'message'=>'Product Not Found.'
-            ],404);
-          }
+                'message' => 'Product Not Found.'
+            ], 404);
+        }
 
-          // Delete Product
-          $cart->delete();
+        // Delete Product
+        $cart->delete();
 
         $cart->delete();
         return response()->json(['message' => 'Item Deleted']);
     }
-
-
-
 }

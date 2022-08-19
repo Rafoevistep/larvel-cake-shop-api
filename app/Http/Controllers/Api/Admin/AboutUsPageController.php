@@ -9,29 +9,20 @@ use Illuminate\Support\Facades\Validator;
 
 class AboutUsPageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         //Show About us Information
-       $about = AboutPage::latest()->first();
-       return response()->json($about, 200);
+        $about = AboutPage::latest()->first();
+        return response()->json($about, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-        'name' => 'required|string|min:5',
-        'description' => 'required|string|min:10',
+            'name' => 'required|string|min:5',
+            'description' => 'required|string|min:10',
         ]);
 
         // Create Product
@@ -40,23 +31,15 @@ class AboutUsPageController extends Controller
             'description' => $request->description,
         ]);
 
-        if($about == null){
-             // Return Json Response
+        if ($about == null) {
+            // Return Json Response
             return response()->json($about, 200);
-        }else{
+        } else {
             return response()->json(['message' => 'You have already added Information in About Page']);
         }
         $validator->validated();
     }
 
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

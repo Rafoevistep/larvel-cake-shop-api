@@ -18,8 +18,7 @@ class NewsletterControoler extends Controller
         return response()->json($subscripe);
     }
 
-
-    public function store(Request $request, Newsletter_subscribers $subscripe )
+    public function store(Request $request, Newsletter_subscribers $subscripe)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -28,18 +27,13 @@ class NewsletterControoler extends Controller
         // $subscripe = Newsletter_subscribers::where(['email' => $subscripe->email])->first();
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'This Mail Alredy Subscriped',$subscripe]);
-        }
-        else
-        {
+            return response()->json(['message' => 'This Mail Alredy Subscriped', $subscripe]);
+        } else {
             $subscripe = Newsletter_subscribers::updateOrCreate([
-                    'email' => $request->email,
-                    ]);
-            return response()->json(['message' => 'Your Mail Subscriped',$subscripe]);
+                'email' => $request->email,
+            ]);
+            return response()->json(['message' => 'Your Mail Subscriped', $subscripe]);
         }
         $validator->validated();
     }
-
-
-
 }

@@ -17,11 +17,11 @@ class OrderController extends Controller
     {
         $total_orders = Order::all();
 
-        return response()->json(['message' => 'Total Orders',$total_orders]);
+        return response()->json(['message' => 'Total Orders', $total_orders]);
     }
 
 
-    public function store(Request $request , Cart $cart)
+    public function store(Request $request, Cart $cart)
     {
         //User Can Enter Information
         $order_number = Str::uuid();
@@ -34,7 +34,7 @@ class OrderController extends Controller
             'street_name' => 'required|string|min:5',
             'area' => 'required|string|min:5',
             'landmark' => 'required|string|min:5',
-            'city' => 'required|string|min:5',
+            'city' => 'required|string|min:3',
         ]);
 
         $checkout = Order::create([
@@ -50,28 +50,26 @@ class OrderController extends Controller
 
         $validator->validated();
 
-        return response()->json(['message' => 'Your Order Placed Succesfuly',$checkout,$cart_items]);
-
-
+        return response()->json(['message' => 'Your Order Placed Succesfuly', $checkout, $cart_items]);
     }
 
-    public function show($id, Cart $cart)
+    public function show($id)
     {
         $user_id = auth('sanctum')->user()->id;
         $order = Order::find($id);
-        $cart_items = Cart::where(['user_id' => $user_id, 'product_id' => $cart->id])->get();
+        $cart_items = Cart::where(['user_id' => $user_id])->get();
 
-        dd($cart_items);
-        if(!$order){
+        if (!$order) {
             return response()->json([
-                'message'=>'Order Not Found.'
+                'message' => 'Order Not Found.'
             ], 404);
         }
-        return response()->json(['message' => 'Single Order',$order,$cart_items]);
-
-
+        return response()->json([
+            'message' => 'Single Order',
+            'order' => $order,
+            'cart_item' => $cart_items
+        ]);
     }
-
 
 
     public function update(Request $request, $id)
@@ -87,38 +85,35 @@ class OrderController extends Controller
         $order->status = $request->status;
         $validator->validated();
 
-        if ($order->save() ) {
+        if ($order->save()) {
             return response()->json([
                 'message' => 'Status Succesfily Updated',
                 $order
-            ],200);
+            ], 200);
         }
 
         $validator->validated();
-
     }
 
 
     public function cancel(Order $order)
-{
-    if( auth('sanctum')->user()){
-        $order->status = 'cancelled';
-        $order->save();
+    {
+        if (auth('sanctum')->user()) {
+            $order->status = 'cancelled';
+            $order->save();
 
-        //check if all suborders are canceled
-        $pendingSubOrders = $order->where('status','!=', 'cancelled')->count();
+            //check if all suborders are canceled
+            $pendingSubOrders = $order->where('status', '!=', 'cancelled')->count();
 
-        if($pendingSubOrders == 0) {
-            $order->order()->update(['status'=>'canceled']);
+            if ($pendingSubOrders == 0) {
+                $order->order()->update(['status' => 'canceled']);
+            }
+
+            return response()->json(['message' => 'Your Order Cancled']);
+        } else {
+            return response()->json(['message' => 'Acton Forbebidden']);
         }
-
-        return response()->json(['message' => 'Your Order Cancled']);
-    }else{
-        return response()->json(['message' => 'Acton Forbebidden']);
     }
-
-
-}
 
 
     public function destroy($id)
@@ -133,31 +128,28 @@ class OrderController extends Controller
         $user_id = auth('sanctum')->user()->id;
 
         $order = Order::where(['user_id' => $user_id])->get();
-        $cart_items = Cart::where(['user_id' => $user_id])->get();
+        // $cart_items = Cart::where(['user_id' => $user_id])->get();
 
 
-        if($order) {
+        if ($order) {
             return response()->json([
                 'message' => 'Your orders',
                 'cart' => $order,
-                'cart_items' =>$cart_items
+                // 'cart_items' =>$cart_items
             ]);
-        }else{
+        } else {
             return response()->json(['message' => 'Your Can  Not Order']);
         }
     }
 
     function search($order)
     {
-        $result = Order::where('order_number', 'LIKE', '%'. $order. '%')->get();
+        $result = Order::where('order_number', 'LIKE', '%' . $order . '%')->get();
 
-        if(count($result)){
-         return Response()->json($result);
+        if (count($result)) {
+            return Response()->json($result);
+        } else {
+            return response()->json(['Result' => 'No Data not found'], 404);
         }
-        else
-        {
-        return response()->json(['Result' => 'No Data not found'], 404);
-      }
-
     }
 }

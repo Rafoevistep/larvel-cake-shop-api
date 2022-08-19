@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
@@ -14,51 +15,51 @@ class ProductController extends Controller
 {
     public function index()
     {
-       // All Product
-       $products = Product::all();
+        // All Product
+        $products = Product::all();
 
-       
-       // Return Json Response
-       return response()->json([
-          'products' => $products,
-       ],200);
+
+        // Return Json Response
+        return response()->json([
+            'products' => $products,
+        ], 200);
     }
 
     public function store(ProductStoreRequest $request)
     {
-            $imageName = Str::random(32).".".$request->image->getClientOriginalExtension();
+        $imageName = Str::random(32) . "." . $request->image->getClientOriginalExtension();
 
-            // Create Product
-            $product = Product::create([
-                'category_id' => $request->category_id,
-                'name' => $request->name,
-                'image' => $imageName,
-                'price' => $request->price,
-                'description' => $request->description,
-            ]);
+        // Create Product
+        $product = Product::create([
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'image' => $imageName,
+            'price' => $request->price,
+            'description' => $request->description,
+        ]);
 
-            $available = AvailableProduct::create([
-                'product_id' => $product->id,
-                'qty' => $request->qty
-            ]);
+        $available = AvailableProduct::create([
+            'product_id' => $product->id,
+            'qty' => $request->qty
+        ]);
 
-            // Save Image in Storage folder
-            Storage::disk('public')->put($imageName, file_get_contents($request->image));
+        // Save Image in Storage folder
+        Storage::disk('public')->put($imageName, file_get_contents($request->image));
 
-            // Return Json Response
-            return response()->json([
-                'product' => $product,
-                'product_available' => $available
-            ], 200);
+        // Return Json Response
+        return response()->json([
+            'product' => $product,
+            'product_available' => $available
+        ], 200);
     }
 
     public function show($id)
     {
         // Product Detail
         $product = Product::find($id);
-        if(!$product){
+        if (!$product) {
             return response()->json([
-                'message'=>'Product Not Found.'
+                'message' => 'Product Not Found.'
             ], 404);
         }
 
@@ -68,8 +69,7 @@ class ProductController extends Controller
         return response()->json([
             'product' => $product,
             'product_available' => $available
-        ],200);
-
+        ], 200);
     }
 
     public function update(ProductStoreRequest $request, $id)
@@ -78,61 +78,60 @@ class ProductController extends Controller
         $product = Product::find($id);
         $available = AvailableProduct::find($id);
 
-        if(!$product){
+        if (!$product) {
             return response()->json([
-            'message'=>'Product Not Found.'
+                'message' => 'Product Not Found.'
             ], 404);
         }
 
-            $product->name = $request->name;
-            $product->price = $request->price;
-            $product->description = $request->description;
-            $product->category_id= $request->category_id;
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->description = $request->description;
+        $product->category_id = $request->category_id;
 
-            if($request->image) {
-                // Public storage
-                $storage = Storage::disk('public');
+        if ($request->image) {
+            // Public storage
+            $storage = Storage::disk('public');
 
-                // Old iamge delete
-                if($storage->exists($product->image))
-                    $storage->delete($product->image);
+            // Old iamge delete
+            if ($storage->exists($product->image))
+                $storage->delete($product->image);
 
-                // Image name
-                $imageName = Str::random(32).".".$request->image->getClientOriginalExtension();
-                $product->image = $imageName;
+            // Image name
+            $imageName = Str::random(32) . "." . $request->image->getClientOriginalExtension();
+            $product->image = $imageName;
 
-                // Image save in public folder
-                $storage->put($imageName, file_get_contents($request->image));
-            }
+            // Image save in public folder
+            $storage->put($imageName, file_get_contents($request->image));
+        }
 
-            $available->qty = $request->qty;
+        $available->qty = $request->qty;
 
-            // Update Product
-            $product->save();
-            $available->save();
+        // Update Product
+        $product->save();
+        $available->save();
 
-            return response()->json([
-                $product,
-                $available
-            ],200);
-
+        return response()->json([
+            $product,
+            $available
+        ], 200);
     }
 
     public function destroy($id)
     {
         // Detail
         $product = Product::find($id);
-        if(!$product){
-          return response()->json([
-             'message'=>'Product Not Found.'
-          ],404);
+        if (!$product) {
+            return response()->json([
+                'message' => 'Product Not Found.'
+            ], 404);
         }
 
         // Public storage
         $storage = Storage::disk('public');
 
         // Iamge delete
-        if($storage->exists($product->image))
+        if ($storage->exists($product->image))
             $storage->delete($product->image);
 
         // Delete Product
@@ -141,19 +140,16 @@ class ProductController extends Controller
         // Return Json Response
         return response()->json([
             'message' => "Product successfully deleted."
-        ],200);
+        ], 200);
     }
 
     function search($name)
     {
-        $result = Product::where('name', 'LIKE', '%'. $name. '%')->get();
-        if(count($result)){
-         return Response()->json($result);
+        $result = Product::where('name', 'LIKE', '%' . $name . '%')->get();
+        if (count($result)) {
+            return Response()->json($result);
+        } else {
+            return response()->json(['Result' => 'No Data not found'], 404);
         }
-        else
-        {
-        return response()->json(['Result' => 'No Data not found'], 404);
-      }
-
     }
 }

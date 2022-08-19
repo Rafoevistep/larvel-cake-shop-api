@@ -68,14 +68,14 @@ Route::post('/profile/update-profile',[ProfileController::class,'update_profile'
 //--------For users Not Singn in-------------------
 
 Route::controller(ProductController::class)->group(function() {
-    Route::get('/products', 'index');
-    Route::get('/products/{product}', 'show');
+    Route::get('/products','index');
+    Route::get('/products/{product}','show');
     Route::get('/products/search/{name}','search');
 });
 
 Route::controller(CategoryController::class)->group(function(){
-    Route::get('/categoty', 'index');
-    Route::get('/categoty/{categoty}', 'show');
+    Route::get('/categoty','index');
+    Route::get('/categoty/{categoty}','show');
 });
 
 Route::get('/about',[AboutUsPageController::class, 'index']);

@@ -13,67 +13,71 @@ class OrderAnalyticsController extends Controller
         $total_orders = Order::all();
 
         return response()->json([
-            'message' => 'Total Orders',count($total_orders),
+            'message' => 'Total Orders', count($total_orders),
             $total_orders
         ]);
     }
 
 
-    public function notConfirmed(){
+    public function notConfirmed()
+    {
         $not_confirmed = Order::where(['status' => 'pending'])->get();
 
         return response()->json([
-            'message' => 'Total Orders',count($not_confirmed),
+            'message' => 'Total Orders', count($not_confirmed),
             $not_confirmed
         ]);
-
     }
 
-    public function  cancelled(){
+    public function  cancelled()
+    {
         $cancelled = Order::where(['status' => 'cancelled'])->get();
 
         return response()->json([
-            'message' => 'Total Orders',count($cancelled),
+            'message' => 'Total Orders', count($cancelled),
             $cancelled
         ]);
     }
 
 
-    public function completed(){
+    public function completed()
+    {
         $completed = Order::where(['status' => 'completed'])->get();
 
         return response()->json([
-            'message' => 'Total Orders',count($completed),
+            'message' => 'Total Orders', count($completed),
             $completed
         ]);
     }
 
-    public function prepeared(){
+    public function prepeared()
+    {
         $prepeared = Order::where(['status' => 'being_prepeared'])->get();
 
         return response()->json([
-            'message' => 'Total Orders',count($prepeared),
+            'message' => 'Total Orders', count($prepeared),
             $prepeared
         ]);
     }
 
 
-    public function pickup(){
+    public function pickup()
+    {
         $pickup = Order::where(['status' => 'pickup'])->get();
 
         return response()->json([
-            'message' => 'Total Orders',count($pickup),
+            'message' => 'Total Orders', count($pickup),
             $pickup
         ]);
     }
 
-    public function  deleveried(){
+    public function  deleveried()
+    {
         $deleveried = Order::where(['status' => 'deleveried'])->get();
 
         return response()->json([
-            'message' => 'Total Orders',count($deleveried),
+            'message' => 'Total Orders', count($deleveried),
             $deleveried
         ]);
     }
-    
 }

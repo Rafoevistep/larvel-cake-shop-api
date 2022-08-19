@@ -14,10 +14,10 @@ class AvailableProductController extends Controller
     public function index()
     {
         //Show Avilable Products
-        $available = AvailableProduct::where('qty', '>=', 1 )->get();
+        $available = AvailableProduct::where('qty', '>=', 1)->get();
 
         return response()->json([
-            'message'=>'Available in the bakery',
+            'message' => 'Available in the bakery',
             $available,
         ]);
     }
@@ -31,13 +31,12 @@ class AvailableProductController extends Controller
 
         $available = AvailableProduct::create([
             'product_id' => $product->id,
-            'qty'=> $request->qty,
+            'qty' => $request->qty,
         ]);
 
         return response()->json($available, 200);
 
         $validator->validated();
-
     }
 
 
@@ -46,16 +45,15 @@ class AvailableProductController extends Controller
         //Show Single Avilable Product
 
         $available = AvailableProduct::find($id);
-        if(!$available){
+        if (!$available) {
             return response()->json([
-                'message'=>'Product Not Avilble.'
+                'message' => 'Product Not Avilble.'
             ], 404);
         }
 
         // Return Json Response
         return response()->json([
             'product_available' => $available
-        ],200);
+        ], 200);
     }
-
 }

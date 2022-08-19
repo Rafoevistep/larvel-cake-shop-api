@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class EnquiryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //Wiew All Enquary
@@ -23,12 +18,6 @@ class EnquiryController extends Controller
         return response()->json($enquiry);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //User can Send Enquary
@@ -47,40 +36,21 @@ class EnquiryController extends Controller
             'message' => $request->message
         ]);
 
-        return response()->json(['message' => 'Your Enquiry Succesfuly Send',$enquiry]);
+        return response()->json(['message' => 'Your Enquiry Succesfuly Send', $enquiry]);
 
         $validator->validated();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
