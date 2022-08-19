@@ -52,7 +52,7 @@ Route::group([
     Route::post('enquary',[EnquiryController::class,'store']);
 
     Route::controller(OrderController::class)->group(function() {
-        Route::post('/checkout/{cart}','store');
+        Route::post('/checkout','store');
         Route::put('/myorder/cancel/{order}', 'cancel');
         Route::get('/myorder','myorder');
     });

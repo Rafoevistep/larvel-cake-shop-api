@@ -25,9 +25,11 @@ class OrderController extends Controller
     {
         //User Can Enter Information
         $order_number = Str::uuid();
+
         $user_id = auth('sanctum')->user()->id;
 
-        $cart_items = Cart::where(['user_id' => $user_id, 'product_id' => $cart->id])->get();
+        $cart_items = Cart::find(['user_id' => $user_id, 'product_id' => $cart->id]);
+
 
         $validator = Validator::make($request->all(), [
             'flat' => 'required|string|min:5',
@@ -55,9 +57,8 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $user_id = auth('sanctum')->user()->id;
         $order = Order::find($id);
-        $cart_items = Cart::where(['user_id' => $user_id])->get();
+        $cart_items = Cart::find($order);
 
         if (!$order) {
             return response()->json([
@@ -70,7 +71,6 @@ class OrderController extends Controller
             'cart_item' => $cart_items
         ]);
     }
-
 
     public function update(Request $request, $id)
     {
@@ -95,7 +95,6 @@ class OrderController extends Controller
         $validator->validated();
     }
 
-
     public function cancel(Order $order)
     {
         if (auth('sanctum')->user()) {
@@ -115,27 +114,22 @@ class OrderController extends Controller
         }
     }
 
-
-    public function destroy($id)
-    {
-        //
-    }
+    // public function destroy($id)
+    // {
+    //     //
+    // }
 
     public function myorder()
     {
         //User Orders
-
         $user_id = auth('sanctum')->user()->id;
 
         $order = Order::where(['user_id' => $user_id])->get();
-        // $cart_items = Cart::where(['user_id' => $user_id])->get();
-
 
         if ($order) {
             return response()->json([
                 'message' => 'Your orders',
                 'cart' => $order,
-                // 'cart_items' =>$cart_items
             ]);
         } else {
             return response()->json(['message' => 'Your Can  Not Order']);
