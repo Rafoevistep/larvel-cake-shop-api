@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\AboutUsPageController;
 use App\Http\Controllers\Api\Admin\AvailableProductController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\ContactPageController;
+use App\Http\Controllers\Api\Admin\OrderAnalyticsController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\ProductController;
 use App\Http\Controllers\Api\AuthController;
@@ -52,8 +53,10 @@ Route::group([
 
     Route::controller(OrderController::class)->group(function() {
         Route::post('/checkout/{cart}','store');
+        Route::put('/myorder/cancel/{order}', 'cancel');
         Route::get('/myorder','myorder');
     });
+
 
 });
 
@@ -140,11 +143,20 @@ Route::group([
 
     Route::get('enquary',[EnquiryController::class,'index']);
 
-
     Route::controller(OrderController::class)->group(function() {
         Route::get('/checkout','index');
         Route::get('/checkout/{checkout}','show');
         Route::put('/checkout/{checkout}','update');
+    });
+
+    Route::controller(OrderAnalyticsController::class)->group(function() {
+        Route::get('/order/alytics/total','total');
+        Route::get('/order/alytics/notconfirmed','notConfirmed');
+        Route::get('/order/alytics/cancelled','cancelled');
+        Route::get('/order/alytics/completed','completed');
+        Route::get('/order/alytics/prepeared','prepeared');
+        Route::get('/order/alytics/pickup','pickup');
+        Route::get('/order/alytics/deleveried','deleveried');
     });
 
 });

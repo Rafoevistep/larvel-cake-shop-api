@@ -55,15 +55,19 @@ class OrderController extends Controller
 
     }
 
-    public function show($id)
+    public function show($id, Cart $cart)
     {
+        $user_id = auth('sanctum')->user()->id;
         $order = Order::find($id);
+        $cart_items = Cart::where(['user_id' => $user_id, 'product_id' => $cart->id])->get();
+
+        dd($cart_items);
         if(!$order){
             return response()->json([
                 'message'=>'Order Not Found.'
             ], 404);
         }
-        return response()->json(['message' => 'Single Order',$order]);
+        return response()->json(['message' => 'Single Order',$order,$cart_items]);
 
 
     }
@@ -91,16 +95,36 @@ class OrderController extends Controller
         }
 
         $validator->validated();
+
     }
+
+
+    public function cancel(Order $order)
+{
+    if( auth('sanctum')->user()){
+        $order->status = 'cancelled';
+        $order->save();
+
+        //check if all suborders are canceled
+        $pendingSubOrders = $order->where('status','!=', 'cancelled')->count();
+
+        if($pendingSubOrders == 0) {
+            $order->order()->update(['status'=>'canceled']);
+        }
+
+        return response()->json(['message' => 'Your Order Cancled']);
+    }else{
+        return response()->json(['message' => 'Acton Forbebidden']);
+    }
+
+
+}
 
 
     public function destroy($id)
     {
         //
     }
-
-
-
 
     public function myorder()
     {
@@ -126,7 +150,7 @@ class OrderController extends Controller
     function search($order)
     {
         $result = Order::where('order_number', 'LIKE', '%'. $order. '%')->get();
-        
+
         if(count($result)){
          return Response()->json($result);
         }
