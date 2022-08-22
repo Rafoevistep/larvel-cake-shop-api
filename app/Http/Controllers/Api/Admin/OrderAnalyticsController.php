@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -78,6 +79,28 @@ class OrderAnalyticsController extends Controller
         return response()->json([
             'message' => 'Total Orders', count($deleveried),
             $deleveried
+        ]);
+    }
+
+    public function showSales()
+    {
+        $order = Order::all();
+
+
+        $cart_items = Cart::query($order)->get();
+
+        $total = $cart_items->map(function ($product) {
+            return $product->price * $product->qty;
+        })->sum();
+
+        $countOrder = count($order);
+
+        $grandTotal = $countOrder * $total;
+
+        return response()->json([
+            'Total Orders' => count($order),
+            'Total Sales' => $grandTotal,
+            'Order Details' => $order,
         ]);
     }
 }

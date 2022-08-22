@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use App\Exports\OrderExport;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Excel;
 
 
 class OrderController extends Controller
@@ -21,14 +23,14 @@ class OrderController extends Controller
     }
 
 
-    public function store(Request $request, Cart $cart)
+    public function store(Request $request)
     {
         //User Can Enter Information
         $order_number = Str::uuid();
 
         $user_id = auth('sanctum')->user()->id;
 
-        $cart_items = Cart::find(['user_id' => $user_id, 'product_id' => $cart->id]);
+        $cart_items = Cart::where('user_id', $user_id)->get();
 
 
         $validator = Validator::make($request->all(), [
@@ -49,16 +51,30 @@ class OrderController extends Controller
             'city' => $request->city,
         ]);
 
+        $total = $cart_items->map(function ($product) {
+            return $product->price * $product->qty;
+        })->sum();
 
         $validator->validated();
 
-        return response()->json(['message' => 'Your Order Placed Succesfuly', $checkout, $cart_items]);
+        return response()->json([
+            'message' => 'Your Order Placed Succesfuly',
+            $checkout,
+            $cart_items,
+            'Grand Total' => $total,
+        ]);
     }
 
     public function show($id)
     {
         $order = Order::find($id);
-        $cart_items = Cart::find($order);
+
+        $cart_items = Cart::query($order)->get();
+
+        $total = $cart_items->map(function ($product) {
+            return $product->price * $product->qty;
+        })->sum();
+
 
         if (!$order) {
             return response()->json([
@@ -67,6 +83,7 @@ class OrderController extends Controller
         }
         return response()->json([
             'message' => 'Single Order',
+            'Grand Total' => $total,
             'order' => $order,
             'cart_item' => $cart_items
         ]);
@@ -146,4 +163,12 @@ class OrderController extends Controller
             return response()->json(['Result' => 'No Data not found'], 404);
         }
     }
+
+
+    public function get_orders_data()
+    {
+        return Excel::download(new OrderExport, 'order.xlsx');
+    }
+
+
 }

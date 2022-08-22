@@ -16,9 +16,15 @@ class CartController extends Controller
 
         $cart = Cart::where(['user_id' => $userId])->get();
 
+        $total = $cart->map(function ($product) {
+            return $product->price * $product->qty;
+        })->sum();
+
+
         if ($cart) {
             return response()->json([
                 'message' => 'Your Cart',
+                'total' => $total,
                 'cart' => $cart
             ]);
         } else {

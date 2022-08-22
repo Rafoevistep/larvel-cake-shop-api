@@ -27,14 +27,31 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ],function ($router) {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::controller(CartController::class)->group(function() {
+            Route::post('/cart/{product}','store');
+            Route::get('/cart','index');
+            Route::delete('/cart/{product}', 'destroy');
+        });
+
+        Route::post('enquary',[EnquiryController::class,'store']);
+
+        Route::controller(OrderController::class)->group(function() {
+            Route::post('/checkout','store');
+            Route::put('/myorder/cancel/{order}', 'cancel');
+            Route::get('/myorder','myorder');
+            Route::get('/myorder/order_export','get_orders_data');
+        });
+
+    });
 
     Route::controller(AuthController::class)->group(function() {
         Route::post('/login','login');
@@ -42,27 +59,10 @@ Route::group([
         Route::post('/logout','logout')->middleware('auth:sanctum');
         Route::get('/user','user')->middleware('auth:sanctum');
     });
-
-    Route::controller(CartController::class)->group(function() {
-        Route::post('/cart/{product}','store');
-        Route::get('/cart','index');
-        Route::delete('/cart/{product}', 'destroy');
-    });
-
-    Route::post('enquary',[EnquiryController::class,'store']);
-
-    Route::controller(OrderController::class)->group(function() {
-        Route::post('/checkout','store');
-        Route::put('/myorder/cancel/{order}', 'cancel');
-        Route::get('/myorder','myorder');
-    });
-
-
 });
 
 Route::post('/profile/change-password',[ProfileController::class,'change_password'])->middleware('auth:sanctum');
 Route::post('/profile/update-profile',[ProfileController::class,'update_profile'])->middleware('auth:sanctum');
-
 
 
 //--------For users Not Singn in-------------------
@@ -157,6 +157,7 @@ Route::group([
         Route::get('/order/alytics/prepeared','prepeared');
         Route::get('/order/alytics/pickup','pickup');
         Route::get('/order/alytics/deleveried','deleveried');
+        Route::get('/order/alytics/sales','showSales');
     });
 
 });
