@@ -86,7 +86,6 @@ class OrderAnalyticsController extends Controller
     {
         $order = Order::all();
 
-
         $cart_items = Cart::query($order)->get();
 
         $total = $cart_items->map(function ($product) {

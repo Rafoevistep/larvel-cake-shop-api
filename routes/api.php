@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\User\CartController;
 use App\Http\Controllers\Api\User\OrderController;
 use App\Http\Controllers\Api\User\EnquiryController;
 use App\Http\Controllers\Api\User\NewsletterControoler;
+use App\Http\Controllers\Api\User\StripePaymanetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -59,10 +60,15 @@ Route::group([
         Route::post('/logout','logout')->middleware('auth:sanctum');
         Route::get('/user','user')->middleware('auth:sanctum');
     });
+
+    Route::post('cratecustomer', [paymentController::class,'createCustomerOnStripe']);
+
+    Route::post('/stripe', [StripePaymanetController::class, 'stripePost']);
 });
 
 Route::post('/profile/change-password',[ProfileController::class,'change_password'])->middleware('auth:sanctum');
 Route::post('/profile/update-profile',[ProfileController::class,'update_profile'])->middleware('auth:sanctum');
+
 
 
 //--------For users Not Singn in-------------------

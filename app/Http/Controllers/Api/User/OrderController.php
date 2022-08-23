@@ -32,7 +32,6 @@ class OrderController extends Controller
 
         $cart_items = Cart::where('user_id', $user_id)->get();
 
-
         $validator = Validator::make($request->all(), [
             'flat' => 'required|string|min:5',
             'street_name' => 'required|string|min:5',
@@ -74,7 +73,6 @@ class OrderController extends Controller
         $total = $cart_items->map(function ($product) {
             return $product->price * $product->qty;
         })->sum();
-
 
         if (!$order) {
             return response()->json([
@@ -169,6 +167,4 @@ class OrderController extends Controller
     {
         return Excel::download(new OrderExport, 'order.xlsx');
     }
-
-
 }
