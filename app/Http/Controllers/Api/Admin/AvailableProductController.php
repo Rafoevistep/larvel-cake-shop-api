@@ -22,6 +22,22 @@ class AvailableProductController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        //Show Single Avilable Product
+
+        $available = AvailableProduct::find($id);
+        if (!$available) {
+            return response()->json([
+                'message' => 'Product Not Avilble.'
+            ], 404);
+        }
+
+        // Return Json Response
+        return response()->json([
+            'product_available' => $available
+        ], 200);
+    }
 
     public function store(Request $request, Product $product)
     {
@@ -40,20 +56,24 @@ class AvailableProductController extends Controller
     }
 
 
-    public function show($id)
+    public function destroy(AvailableProduct $product, $id)
     {
-        //Show Single Avilable Product
-
-        $available = AvailableProduct::find($id);
-        if (!$available) {
+        // Detail
+        $product = AvailableProduct::find($id);
+        if (!$product) {
             return response()->json([
-                'message' => 'Product Not Avilble.'
+                'message' => 'Product Not Found.'
             ], 404);
         }
 
+        // Delete Category
+        $product->delete();
+
         // Return Json Response
         return response()->json([
-            'product_available' => $available
+            'message' => "Avibale Product successfully deleted."
         ], 200);
     }
+
+
 }

@@ -9,6 +9,7 @@ use Stripe\StripeClient;
 use Stripe\Stripe;
 
 
+
 class StripePaymanetController extends Controller
 {
     public function stripePost(Request $request, $id)
@@ -24,7 +25,7 @@ class StripePaymanetController extends Controller
         try {
             $stripe = new \Stripe\StripeClient(
                 env('STRIPE_SECRET')
-              );
+            );
 
             $res = $stripe->tokens->create([
                 'card' => [
@@ -35,7 +36,7 @@ class StripePaymanetController extends Controller
                 ],
             ]);
 
-            \Stripe\Stripe::setApiKey( env('STRIPE_SECRET'));
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 
             $response = $stripe->charges->create([
                 'amount' => $product->price * 100,
@@ -45,7 +46,6 @@ class StripePaymanetController extends Controller
             ]);
 
             return response()->json([$response->status], 201);
-
         } catch (Exception $ex) {
             return response()->json([['responce => Eror']], 500);
         }

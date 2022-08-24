@@ -67,11 +67,13 @@ class CategoryController extends Controller
     }
 
 
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Category $category,$id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|min:3',
         ]);
+
+        $category = Category::find($id);
 
         $category->name = $request->name;
         $validator->validated();

@@ -145,6 +145,8 @@ Route::group([
         Route::get('/aviable','index');
         Route::get('/aviable/{aviable}', 'show');
         Route::post('/aviable/{aviable}','store');
+        Route::delete('/aviable/{aviable}', 'destroy');
+        Route::put('/aviable/{aviable}', 'update');
     });
 
     Route::get('enquary',[EnquiryController::class,'index']);
