@@ -63,7 +63,7 @@ Route::group([
 
     Route::post('cratecustomer', [paymentController::class,'createCustomerOnStripe']);
 
-    Route::post('/stripe', [StripePaymanetController::class, 'stripePost']);
+    Route::post('/stripe/{product}', [StripePaymanetController::class, 'stripePost']);
 });
 
 Route::post('/profile/change-password',[ProfileController::class,'change_password'])->middleware('auth:sanctum');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Stripe\StripeClient;
 use Stripe\Stripe;
@@ -10,13 +11,20 @@ use Stripe\Stripe;
 
 class StripePaymanetController extends Controller
 {
-    public function stripePost(Request $request)
+    public function stripePost(Request $request, $id)
     {
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'message' => 'Product Not Found.'
+            ], 404);
+        }
+
         try {
             $stripe = new \Stripe\StripeClient(
                 env('STRIPE_SECRET')
               );
-
 
             $res = $stripe->tokens->create([
                 'card' => [
@@ -30,10 +38,10 @@ class StripePaymanetController extends Controller
             \Stripe\Stripe::setApiKey( env('STRIPE_SECRET'));
 
             $response = $stripe->charges->create([
-                'amount' => $request->amount * 100,
+                'amount' => $product->price * 100,
                 'currency' => 'usd',
                 'source' => $res->id,
-                'description' => $request->description
+                'description' => $request->description,
             ]);
 
             return response()->json([$response->status], 201);
