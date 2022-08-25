@@ -6,6 +6,7 @@ use App\Exports\OrderExport;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -62,6 +63,44 @@ class OrderController extends Controller
             $checkout,
             $cart_items,
             'Grand Total' => $total,
+        ]);
+    }
+
+    public function storeSingle(Request $request,$id)
+    {
+        //User Can Enter Information
+        $order_number = Str::uuid();
+
+        $user_id = auth('sanctum')->user()->id;
+
+        $product = Product::find($id);
+
+        $validator = Validator::make($request->all(), [
+            'flat' => 'required|string|min:5',
+            'street_name' => 'required|string|min:5',
+            'area' => 'required|string|min:5',
+            'landmark' => 'required|string|min:5',
+            'city' => 'required|string|min:3',
+        ]);
+
+        $checkout = Order::create([
+            'order_number' => $order_number,
+            'user_id' => $user_id,
+            'flat' => $request->flat,
+            'street_name' => $request->street_name,
+            'area' => $request->area,
+            'landmark' => $request->landmark,
+            'city' => $request->city,
+            'payment_method' => $request->payment_method,
+        ]);
+
+
+        $validator->validated();
+
+        return response()->json([
+            'message' => 'Your Order Placed Succesfuly',
+            $checkout,
+            $product,
         ]);
     }
 

@@ -47,6 +47,7 @@ Route::group([
 
         Route::controller(OrderController::class)->group(function () {
             Route::post('/checkout', 'store');
+            Route::post('/checkout/{product}', 'storeSingle');
             Route::put('/myorder/cancel/{order}', 'cancel');
             Route::get('/myorder', 'myorder');
             Route::get('/myorder/order_export', 'get_orders_data');
