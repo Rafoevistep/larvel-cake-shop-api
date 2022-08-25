@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class StripePaymanetController extends Controller
 {
-    public function stripePost(Request $request, $id)
+    public function stripeBuyNow(Request $request, $id)
     {
         $product = Product::find($id);
 
@@ -47,16 +47,13 @@ class StripePaymanetController extends Controller
             ]);
 
             return response()->json([$response->status], 201);
-
         } catch (Exception $ex) {
             return response()->json([['responce => Eror']], 500);
         }
     }
 
-
-    public function stripeChekout(Request $request)
+    public function stripeChekoutCard(Request $request)
     {
-
         $user_id = auth('sanctum')->user()->id;
 
         $cart_items = Cart::where('user_id', $user_id)->get();
@@ -89,7 +86,6 @@ class StripePaymanetController extends Controller
             ]);
 
             return response()->json([$response->status], 201);
-
         } catch (Exception $ex) {
             return response()->json([['responce => Eror']], 500);
         }

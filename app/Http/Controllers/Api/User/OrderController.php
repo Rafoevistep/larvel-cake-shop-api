@@ -48,6 +48,7 @@ class OrderController extends Controller
             'area' => $request->area,
             'landmark' => $request->landmark,
             'city' => $request->city,
+            'payment_method' => $request->payment_method,
         ]);
 
         $total = $cart_items->map(function ($product) {
