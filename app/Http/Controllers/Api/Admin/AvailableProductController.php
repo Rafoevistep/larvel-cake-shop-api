@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class AvailableProductController extends Controller
 {
 
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         //Show Avilable Products
         $available = AvailableProduct::where('qty', '>=', 1)->get();
@@ -22,7 +22,7 @@ class AvailableProductController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show($id): \Illuminate\Http\JsonResponse
     {
         //Show Single Avilable Product
 
@@ -39,7 +39,7 @@ class AvailableProductController extends Controller
         ], 200);
     }
 
-    public function store(Request $request, Product $product)
+    public function store(Request $request, Product $product): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'qty' => 'required|integer',
@@ -56,7 +56,7 @@ class AvailableProductController extends Controller
     }
 
 
-    public function destroy(AvailableProduct $product, $id)
+    public function destroy(AvailableProduct $product, $id): \Illuminate\Http\JsonResponse
     {
         // Detail
         $product = AvailableProduct::find($id);

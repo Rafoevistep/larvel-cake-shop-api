@@ -5,11 +5,10 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
-use Illuminate\Http\Request;
 
 class OrderAnalyticsController extends Controller
 {
-    public function total()
+    public function total(): \Illuminate\Http\JsonResponse
     {
         $total_orders = Order::all();
 
@@ -19,8 +18,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-
-    public function notConfirmed()
+    public function notConfirmed(): \Illuminate\Http\JsonResponse
     {
         $not_confirmed = Order::where(['status' => 'pending'])->get();
 
@@ -30,7 +28,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function  cancelled()
+    public function cancelled(): \Illuminate\Http\JsonResponse
     {
         $cancelled = Order::where(['status' => 'cancelled'])->get();
 
@@ -40,8 +38,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-
-    public function completed()
+    public function completed(): \Illuminate\Http\JsonResponse
     {
         $completed = Order::where(['status' => 'completed'])->get();
 
@@ -51,7 +48,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function prepeared()
+    public function prepeared(): \Illuminate\Http\JsonResponse
     {
         $prepeared = Order::where(['status' => 'being_prepeared'])->get();
 
@@ -61,8 +58,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-
-    public function pickup()
+    public function pickup(): \Illuminate\Http\JsonResponse
     {
         $pickup = Order::where(['status' => 'pickup'])->get();
 
@@ -72,7 +68,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function  deleveried()
+    public function deleveried(): \Illuminate\Http\JsonResponse
     {
         $deleveried = Order::where(['status' => 'deleveried'])->get();
 
@@ -82,7 +78,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function showSales()
+    public function showSales(): \Illuminate\Http\JsonResponse
     {
         $order = Order::all();
 

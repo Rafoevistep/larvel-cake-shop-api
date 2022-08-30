@@ -61,7 +61,6 @@ Route::group([
         Route::get('/user', 'user')->middleware('auth:sanctum');
     });
 
-    Route::post('cratecustomer', [paymentController::class, 'createCustomerOnStripe']);
 
     Route::post('/stripe/{product}', [StripePaymanetController::class, 'stripeBuyNow']);
     Route::post('/stripe', [StripePaymanetController::class, 'stripeChekoutCard']);

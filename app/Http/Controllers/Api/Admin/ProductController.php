@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         // All Product
         $products = Product::all();
@@ -24,7 +24,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function store(ProductStoreRequest $request)
+    public function store(ProductStoreRequest $request): \Illuminate\Http\JsonResponse
     {
         $imageName = Str::random(32) . "." . $request->image->getClientOriginalExtension();
 
@@ -52,7 +52,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function show($id)
+    public function show($id): \Illuminate\Http\JsonResponse
     {
         // Product Detail
         $product = Product::find($id);
@@ -71,7 +71,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function update(ProductStoreRequest $request, $id)
+    public function update(ProductStoreRequest $request, $id): \Illuminate\Http\JsonResponse
     {
         // Find product
         $product = Product::find($id);
@@ -116,7 +116,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function destroy($id)
+    public function destroy($id): \Illuminate\Http\JsonResponse
     {
         // Detail
         $product = Product::find($id);
@@ -142,7 +142,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    function search($name)
+    function search($name): \Illuminate\Http\JsonResponse
     {
         $result = Product::where('name', 'LIKE', '%' . $name . '%')->get();
         if (count($result)) {

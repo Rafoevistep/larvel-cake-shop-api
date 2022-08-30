@@ -10,21 +10,19 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         // All Users showing
         $user = User::all();
 
         // Return Json Response
         return response()->json([
-            count($user),
-            'user' => $user
+            'Count' => count($user),
+            'Total Registered Users' => $user
         ], 200,);
     }
 
-
-
-    public function update_profile(Request $request, $id)
+    public function update_profile(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|min:2|max:100',
@@ -53,18 +51,10 @@ class UserController extends Controller
         $user->save();
     }
 
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-
-
-    public function show($id)
+    public function show($id): \Illuminate\Http\JsonResponse
     {
         // User Detail
-        $user =  User::find($id);
+        $user = User::find($id);
         if (!$user) {
             return response()->json([
                 'message' => 'User Not Found.'
@@ -77,15 +67,4 @@ class UserController extends Controller
         ], 200);
     }
 
-
-    // public function update(Request $request, $id)
-    // {
-    //     //
-    // }
-
-
-    public function destroy($id)
-    {
-        //
-    }
 }

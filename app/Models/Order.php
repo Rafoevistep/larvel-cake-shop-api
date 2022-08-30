@@ -15,6 +15,7 @@ class Order extends Model
         'status',
         'is_paid',
         'payment_method',
+        'total',
         'flat',
         'street_name',
         'area',
@@ -33,5 +34,4 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
-    
 }

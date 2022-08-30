@@ -6,6 +6,7 @@ use App\Exports\OrderExport;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,7 @@ use Excel;
 class OrderController extends Controller
 {
 
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         $total_orders = Order::all();
 
@@ -24,22 +25,30 @@ class OrderController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        //User Can Enter Information
-        $order_number = Str::uuid();
-
-        $user_id = auth('sanctum')->user()->id;
-
-        $cart_items = Cart::where('user_id', $user_id)->get();
-
         $validator = Validator::make($request->all(), [
             'flat' => 'required|string|min:5',
             'street_name' => 'required|string|min:5',
             'area' => 'required|string|min:5',
             'landmark' => 'required|string|min:5',
             'city' => 'required|string|min:3',
+            'total' => 'required|integer'
         ]);
+
+        $validator->validated();
+
+        //User Can Enter Information
+        $order_number = Str::uuid();
+
+        $user_id = auth('sanctum')->user()->id;
+        $cart = Cart::where('user_id', $user_id)->get()->all();
+
+        if (!$cart) {
+            return response()->json([
+                'message' => 'Cart is empty.'
+            ]);
+        };
 
         $checkout = Order::create([
             'order_number' => $order_number,
@@ -52,22 +61,45 @@ class OrderController extends Controller
             'payment_method' => $request->payment_method,
         ]);
 
-        $total = $cart_items->map(function ($product) {
-            return $product->price * $product->qty;
-        })->sum();
+        $orderItems = [];
+        $total = 0;
 
-        $validator->validated();
+        foreach ($cart as $cartProduct) {
+            $orderItems[] = [
+                'order_id' => $checkout->id,
+                'product_id' => $cartProduct->product_id,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'qty' => $cartProduct->qty,
+            ];
+            $total += $cartProduct->price * $cartProduct->qty;
+        }
+
+        OrderItem::insert($orderItems);
+
+        $checkout->total = $total;
+        $checkout->save();
+
+        Cart::where('user_id', $user_id)->delete();
 
         return response()->json([
-            'message' => 'Your Order Placed Succesfuly',
+            'message' => 'Your Order Placed Successfully',
+            'Total Price' => $total,
             $checkout,
-            $cart_items,
-            'Grand Total' => $total,
         ]);
     }
 
-    public function storeSingle(Request $request,$id)
+//--------------------------------------------------------------------------------------
+    public function storeSingle(Request $request, $id): \Illuminate\Http\JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'flat' => 'required|string|min:5',
+            'street_name' => 'required|string|min:5',
+            'area' => 'required|string|min:5',
+            'landmark' => 'required|string|min:5',
+            'city' => 'required|string|min:3',
+        ]);
+
         //User Can Enter Information
         $order_number = Str::uuid();
 
@@ -75,14 +107,6 @@ class OrderController extends Controller
 
         $product = Product::find($id);
 
-        $validator = Validator::make($request->all(), [
-            'flat' => 'required|string|min:5',
-            'street_name' => 'required|string|min:5',
-            'area' => 'required|string|min:5',
-            'landmark' => 'required|string|min:5',
-            'city' => 'required|string|min:3',
-        ]);
-
         $checkout = Order::create([
             'order_number' => $order_number,
             'user_id' => $user_id,
@@ -94,37 +118,37 @@ class OrderController extends Controller
             'payment_method' => $request->payment_method,
         ]);
 
-
         $validator->validated();
 
+        if ($checkout){
+            $order_item = OrderItem::create([
+                'order_id' => $checkout->id,
+                'product_id' => $product->id
+            ]);
+        }
+
         return response()->json([
-            'message' => 'Your Order Placed Succesfuly',
+            'message' => 'Your Order Placed Successfully',
             $checkout,
-            $product,
         ]);
+
+
     }
 
-    public function show($id)
+    public function show($id): \Illuminate\Http\JsonResponse
     {
-        $order = Order::find($id);
+        $items = OrderItem::where('order_id', $id)->with('product')->get()->toArray();
 
-        $cart_items = Cart::query($order)->get();
-
-        $total = $cart_items->map(function ($product) {
-            return $product->price * $product->qty;
-        })->sum();
-
-        if (!$order) {
+        if (!$items) {
             return response()->json([
                 'message' => 'Order Not Found.'
             ], 404);
         }
+
         return response()->json([
-            'message' => 'Single Order',
-            'Grand Total' => $total,
-            'order' => $order,
-            'cart_item' => $cart_items
+            'order' => $items,
         ]);
+
     }
 
     public function update(Request $request, $id)
@@ -150,7 +174,7 @@ class OrderController extends Controller
         $validator->validated();
     }
 
-    public function cancel(Order $order)
+    public function cancel(Order $order): \Illuminate\Http\JsonResponse
     {
         if (auth('sanctum')->user()) {
             $order->status = 'cancelled';
@@ -169,12 +193,7 @@ class OrderController extends Controller
         }
     }
 
-    // public function destroy($id)
-    // {
-    //     //
-    // }
-
-    public function myorder()
+    public function myorder(): \Illuminate\Http\JsonResponse
     {
         //User Orders
         $user_id = auth('sanctum')->user()->id;
@@ -191,7 +210,7 @@ class OrderController extends Controller
         }
     }
 
-    function search($order)
+    function search($order): \Illuminate\Http\JsonResponse
     {
         $result = Order::where('order_number', 'LIKE', '%' . $order . '%')->get();
 

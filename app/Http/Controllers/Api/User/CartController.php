@@ -58,17 +58,6 @@ class CartController extends Controller
     }
 
 
-    public function show($id)
-    {
-        //
-    }
-
-
-    public function update(Request $request, $id, Product $product)
-    {
-    }
-
-
     public function destroy($id)
     {
         //Deleting From cart
