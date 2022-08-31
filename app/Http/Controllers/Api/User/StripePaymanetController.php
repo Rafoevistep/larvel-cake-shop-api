@@ -85,7 +85,10 @@ class StripePaymanetController extends Controller
                 'description' => $request->description,
             ]);
 
-            return response()->json([$response->status], 201);
+            $cart_items->each->delete($cart_items);
+
+            return response()->json([$response->status], 201,);
+
         } catch (Exception $e) {
             return response()->json([['response => Error']], 500);
         }

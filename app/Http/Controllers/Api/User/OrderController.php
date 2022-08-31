@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Excel;
+use Illuminate\Validation\ValidationException;
 
 
 class OrderController extends Controller
@@ -23,7 +24,6 @@ class OrderController extends Controller
 
         return response()->json(['message' => 'Total Orders', $total_orders]);
     }
-
 
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
@@ -42,6 +42,7 @@ class OrderController extends Controller
         $order_number = Str::uuid();
 
         $user_id = auth('sanctum')->user()->id;
+
         $cart = Cart::where('user_id', $user_id)->get()->all();
 
         if (!$cart) {
@@ -89,7 +90,7 @@ class OrderController extends Controller
         ]);
     }
 
-//--------------------------------------------------------------------------------------
+
     public function storeSingle(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
@@ -100,7 +101,8 @@ class OrderController extends Controller
             'city' => 'required|string|min:3',
         ]);
 
-        //User Can Enter Information
+        $validator->validated();
+
         $order_number = Str::uuid();
 
         $user_id = auth('sanctum')->user()->id;
@@ -116,14 +118,15 @@ class OrderController extends Controller
             'landmark' => $request->landmark,
             'city' => $request->city,
             'payment_method' => $request->payment_method,
+            'qty' => $request->qty,
+            'total' => $product->price
         ]);
 
-        $validator->validated();
-
-        if ($checkout){
+        if ($checkout) {
             $order_item = OrderItem::create([
                 'order_id' => $checkout->id,
-                'product_id' => $product->id
+                'product_id' => $product->id,
+                'qty' => $request->qty
             ]);
         }
 
@@ -132,12 +135,14 @@ class OrderController extends Controller
             $checkout,
         ]);
 
-
     }
 
     public function show($id): \Illuminate\Http\JsonResponse
     {
-        $items = OrderItem::where('order_id', $id)->with('product')->get()->toArray();
+       $items = OrderItem::where('order_id', $id)->with('product')->get()->toArray();
+
+
+        $order = Order::find($id);
 
         if (!$items) {
             return response()->json([
@@ -146,7 +151,8 @@ class OrderController extends Controller
         }
 
         return response()->json([
-            'order' => $items,
+            'order' => $order,
+            'product' => $items,
         ]);
 
     }
