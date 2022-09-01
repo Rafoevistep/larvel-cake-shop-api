@@ -62,7 +62,7 @@ class ProductController extends Controller
             ], 404);
         }
 
-        $available = AvailableProduct::find($id);
+        $available = AvailableProduct::find($product);
 
         // Return Json Response
         return response()->json([
