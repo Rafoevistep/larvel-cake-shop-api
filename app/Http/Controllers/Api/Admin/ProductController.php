@@ -62,7 +62,7 @@ class ProductController extends Controller
             ], 404);
         }
 
-        $available = AvailableProduct::where('product_id', $id)->get();
+        $available = AvailableProduct::where('product_id', $product->id)->get();
 
         // Return Json Response
         return response()->json([
@@ -75,7 +75,7 @@ class ProductController extends Controller
     {
         // Find product
         $product = Product::find($id);
-        $available = AvailableProduct::find($product);
+        $available = AvailableProduct::where('product_id', $id)->get();;
 
         if (!$product) {
             return response()->json([
@@ -107,7 +107,7 @@ class ProductController extends Controller
         $available->qty = $request->qty;
 
         // Update Product
-        $product->save();
+        $product->save($request->all());
         $available->save();
 
         return response()->json([
