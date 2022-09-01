@@ -75,7 +75,8 @@ class ProductController extends Controller
     {
         // Find product
         $product = Product::find($id);
-        $available = AvailableProduct::where('product_id', $product->id)->get();
+
+        $available = AvailableProduct::where('product_id', $product->id)->first();
 
         if (!$product) {
             return response()->json([
@@ -83,10 +84,13 @@ class ProductController extends Controller
             ], 404);
         }
 
-        $product->name = $request->name;
-        $product->price = $request->price;
-        $product->description = $request->description;
-        $product->category_id = $request->category_id;
+        $product->update($request->all());
+        $available->update($request->all());
+        // $product->name = $request->name;
+        // $product->price = $request->price;
+        // $product->description = $request->description;
+        // $product->category_id = $request->category_id;
+        // $available->qty = $request->qty;
 
         if ($request->image) {
             // Public storage
@@ -104,11 +108,9 @@ class ProductController extends Controller
             $storage->put($imageName, file_get_contents($request->image));
         }
 
-        $available->qty = $request->qty;
-
         // Update Product
-        $product->save();
-        $available->save();
+        // $product->save();
+        // $available->save();
 
         return response()->json([
             $product,
