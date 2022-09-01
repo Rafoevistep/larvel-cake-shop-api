@@ -62,7 +62,7 @@ class ProductController extends Controller
             ], 404);
         }
 
-        $available = AvailableProduct::where('product_id', $id)->with('product');
+        $available = AvailableProduct::where('product_id', $id)->get();
 
         // Return Json Response
         return response()->json([
