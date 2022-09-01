@@ -75,7 +75,7 @@ class ProductController extends Controller
     {
         // Find product
         $product = Product::find($id);
-        $available = AvailableProduct::find($id);
+        $available = AvailableProduct::where('product_id', $id)->get();;
 
         if (!$product) {
             return response()->json([
