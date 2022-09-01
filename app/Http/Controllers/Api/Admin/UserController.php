@@ -17,8 +17,8 @@ class UserController extends Controller
 
         // Return Json Response
         return response()->json([
-            'Count' => count($user),
-            'Total Registered Users' => $user
+            'count' => count($user),
+            'users' => $user
         ], 200,);
     }
 
@@ -38,17 +38,21 @@ class UserController extends Controller
 
         $user = User::find($id);
 
-        $user->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone' => $request->phone,
-        ]);
+        if ($user) {
+            $user->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone' => $request->phone,
+            ]);
 
-        return response()->json([
-            'message' => 'User Profile successfully updated',
-        ], 200);
+            return response()->json([
+                'message' => 'User Profile successfully updated',
+            ], 200);
 
-        $user->save();
+            $user->save();
+        } else {
+            return response()->json(['Error' => 'User Not Defined']);
+        }
     }
 
     public function show($id): \Illuminate\Http\JsonResponse
@@ -66,5 +70,4 @@ class UserController extends Controller
             'user' => $user
         ], 200);
     }
-
 }

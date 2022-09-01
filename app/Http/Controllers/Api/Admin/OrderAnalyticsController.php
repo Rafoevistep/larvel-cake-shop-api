@@ -13,8 +13,8 @@ class OrderAnalyticsController extends Controller
         $total_orders = Order::all();
 
         return response()->json([
-            'message' => 'Total Orders', count($total_orders),
-            $total_orders
+            'count' => count($total_orders),
+            'list' => $total_orders
         ]);
     }
 
@@ -23,8 +23,8 @@ class OrderAnalyticsController extends Controller
         $not_confirmed = Order::where(['status' => 'pending'])->get();
 
         return response()->json([
-            'message' => 'Total Orders', count($not_confirmed),
-            $not_confirmed
+            'count' => count($not_confirmed),
+            'list' => $not_confirmed
         ]);
     }
 
@@ -33,8 +33,8 @@ class OrderAnalyticsController extends Controller
         $cancelled = Order::where(['status' => 'cancelled'])->get();
 
         return response()->json([
-            'message' => 'Total Orders', count($cancelled),
-            $cancelled
+            'count' =>  count($cancelled),
+            'list' => $cancelled
         ]);
     }
 
@@ -43,8 +43,8 @@ class OrderAnalyticsController extends Controller
         $completed = Order::where(['status' => 'completed'])->get();
 
         return response()->json([
-            'message' => 'Total Orders', count($completed),
-            $completed
+            'count' => count($completed),
+            'list' =>  $completed
         ]);
     }
 
@@ -53,8 +53,8 @@ class OrderAnalyticsController extends Controller
         $prepeared = Order::where(['status' => 'being_prepeared'])->get();
 
         return response()->json([
-            'message' => 'Total Orders', count($prepeared),
-            $prepeared
+            'count' =>  count($prepeared),
+            'list' =>  $prepeared
         ]);
     }
 
@@ -63,8 +63,8 @@ class OrderAnalyticsController extends Controller
         $pickup = Order::where(['status' => 'pickup'])->get();
 
         return response()->json([
-            'message' => 'Total Orders', count($pickup),
-            $pickup
+            'count' =>  count($pickup),
+            'list' =>  $pickup
         ]);
     }
 
@@ -73,8 +73,8 @@ class OrderAnalyticsController extends Controller
         $deleveried = Order::where(['status' => 'deleveried'])->get();
 
         return response()->json([
-            'message' => 'Total Orders', count($deleveried),
-            $deleveried
+            'count' =>  count($deleveried),
+            'list' => $deleveried
         ]);
     }
 

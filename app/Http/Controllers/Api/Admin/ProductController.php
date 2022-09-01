@@ -86,11 +86,6 @@ class ProductController extends Controller
 
         $product->update($request->all());
         $available->update($request->all());
-        // $product->name = $request->name;
-        // $product->price = $request->price;
-        // $product->description = $request->description;
-        // $product->category_id = $request->category_id;
-        // $available->qty = $request->qty;
 
         if ($request->image) {
             // Public storage
@@ -108,13 +103,9 @@ class ProductController extends Controller
             $storage->put($imageName, file_get_contents($request->image));
         }
 
-        // Update Product
-        // $product->save();
-        // $available->save();
-
         return response()->json([
-            $product,
-            $available
+            'Product Updated Succesfily' => $product,
+            'Available In Bakery' => $available,
         ], 200);
     }
 

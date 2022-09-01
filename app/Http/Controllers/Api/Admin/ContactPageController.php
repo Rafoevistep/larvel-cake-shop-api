@@ -25,6 +25,8 @@ class ContactPageController extends Controller
             'email' => 'required|email',
         ]);
 
+        $validator->validated();
+
         // Create Product
         $contact = ContactPage::updateOrCreate([
             'address' => $request->address,
@@ -38,24 +40,7 @@ class ContactPageController extends Controller
         } else {
             return response()->json(['message' => 'You have already added Information in Contact Page']);
         }
-        $validator->validated();
+        
     }
 
-
-    public function show($id)
-    {
-        //
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-
-    public function destroy($id)
-    {
-        //
-    }
 }

@@ -12,13 +12,11 @@ use Illuminate\Support\Facades\Validator;
 class CategoryController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {
         $categories = Category::all();
 
-        return response()->json([
-            $categories
-        ], 200);
+        return response()->json($categories, 200);
     }
 
 
@@ -41,25 +39,26 @@ class CategoryController extends Controller
 
 
 
-    public function create()
-    {
-        $categories = Category::all();
-
-        return response()->json([
-            $categories
-        ], 200);
-    }
-
-
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|min:5',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['Error' => 'Enter Min 5 Symbol']);
+        }
+
+        $validator->validated();
+
         $category = new Category;
+
         $category->name = $request->name;
 
         if ($category->save()) {
             return response()->json([
                 'message' => 'Category Added Succesfully.',
-                $category
+                'Category' => $category
             ], 200);
         }
 

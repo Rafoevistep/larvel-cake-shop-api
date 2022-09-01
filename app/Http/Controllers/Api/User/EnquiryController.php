@@ -27,6 +27,9 @@ class EnquiryController extends Controller
             'message' => 'required|message|min:10|max:255',
         ]);
 
+
+        $validator->validated();
+        
         $userId = auth('sanctum')->user()->id;
 
         $enquiry = Enquiry::create([
@@ -38,21 +41,6 @@ class EnquiryController extends Controller
 
         return response()->json(['message' => 'Your Enquiry Succesfuly Send', $enquiry]);
 
-        $validator->validated();
     }
 
-    public function show($id)
-    {
-        //
-    }
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
-    }
 }

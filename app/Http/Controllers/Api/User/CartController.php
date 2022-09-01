@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
@@ -35,6 +36,19 @@ class CartController extends Controller
 
     public function store(Request $request, Product $product)
     {
+        $validator = Validator::make($request->all(), [
+            'qty' => 'required|integer|',
+        ]);
+
+        $validator->validated();
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validations fails',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
         $userId = auth('sanctum')->user()->id;
 
         $AddCart = Cart::where(['user_id' => $userId, 'product_id' => $product->id])->first();
@@ -71,7 +85,6 @@ class CartController extends Controller
         // Delete Product
         $cart->delete();
 
-        $cart->delete();
         return response()->json(['message' => 'Item Deleted']);
     }
 }

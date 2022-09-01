@@ -22,7 +22,9 @@ class OrderController extends Controller
     {
         $total_orders = Order::all();
 
-        return response()->json(['message' => 'Total Orders', $total_orders]);
+        return response()->json([
+            'total' =>  $total_orders
+        ]);
     }
 
     public function store(Request $request): \Illuminate\Http\JsonResponse
@@ -85,8 +87,8 @@ class OrderController extends Controller
 
         return response()->json([
             'message' => 'Your Order Placed Successfully',
-            'Total Price' => $total,
-            $checkout,
+            'total' => $total,
+            'order' => $checkout,
         ]);
     }
 
@@ -108,6 +110,12 @@ class OrderController extends Controller
         $user_id = auth('sanctum')->user()->id;
 
         $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json([
+                'message' => 'Product Not Found.'
+            ], 404);
+        }
 
         $checkout = Order::create([
             'order_number' => $order_number,
@@ -132,9 +140,8 @@ class OrderController extends Controller
 
         return response()->json([
             'message' => 'Your Order Placed Successfully',
-            $checkout,
+            'order' => $checkout,
         ]);
-
     }
 
     public function show($id): \Illuminate\Http\JsonResponse
@@ -153,7 +160,6 @@ class OrderController extends Controller
             'order' => $order,
             'product' => $items,
         ]);
-
     }
 
     public function update(Request $request, $id)
@@ -166,17 +172,25 @@ class OrderController extends Controller
             'status' => 'required|string|',
         ]);
 
-        $order->status = $request->status;
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Status Not Updated']);
+        };
+
         $validator->validated();
+
+        $order->status = $request->status;
 
         if ($order->save()) {
             return response()->json([
                 'message' => 'Status Succesfily Updated',
-                $order
+                'order' => $order
+            ], 200);
+        }else{
+            return response()->json([
+                'Error' => 'Status Nothing Updated',
             ], 200);
         }
 
-        $validator->validated();
     }
 
     public function cancel(Order $order): \Illuminate\Http\JsonResponse
@@ -220,7 +234,7 @@ class OrderController extends Controller
         $result = Order::where('order_number', 'LIKE', '%' . $order . '%')->get();
 
         if (count($result)) {
-            return Response()->json($result);
+            return response()->json($result);
         } else {
             return response()->json(['Result' => 'No Data not found'], 404);
         }

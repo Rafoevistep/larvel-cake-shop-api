@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Newsletter_subscribers;
+use App\Models\NewsletterSubscribers;
 use Darryldecode\Cart\Validators\Validator;
 use Illuminate\Http\Request;
 
@@ -14,26 +14,30 @@ class NewsletterControoler extends Controller
     {
         //Show Shubscropes Emails
 
-        $subscripe = Newsletter_subscribers::all();
+        $subscripe = NewsletterSubscribers::all();
         return response()->json($subscripe);
     }
 
-    public function store(Request $request, Newsletter_subscribers $subscripe)
+    public function store(Request $request, NewsletterSubscribers $subscripe)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
         ]);
 
-        // $subscripe = Newsletter_subscribers::where(['email' => $subscripe->email])->first();
+        $validator->validated();
+
 
         if ($validator->fails()) {
             return response()->json(['message' => 'This Mail Alredy Subscriped', $subscripe]);
         } else {
-            $subscripe = Newsletter_subscribers::updateOrCreate([
+            $subscripe = NewsletterSubscribers::updateOrCreate([
                 'email' => $request->email,
             ]);
-            return response()->json(['message' => 'Your Mail Subscriped', $subscripe]);
+            return response()->json([
+                'message' => 'Your Mail Subscriped',
+                'info' => $subscripe
+            ]);
         }
-        $validator->validated();
+
     }
 }

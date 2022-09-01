@@ -25,6 +25,8 @@ class AboutUsPageController extends Controller
             'description' => 'required|string|min:10',
         ]);
 
+        $validator->validated();
+
         // Create Product
         $about = AboutPage::updateOrCreate([
             'name' => $request->name,
@@ -37,7 +39,7 @@ class AboutUsPageController extends Controller
         } else {
             return response()->json(['message' => 'You have already added Information in About Page']);
         }
-        $validator->validated();
+
     }
 
     public function destroy($id)

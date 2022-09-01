@@ -18,7 +18,7 @@ class AvailableProductController extends Controller
 
         return response()->json([
             'message' => 'Available in the bakery',
-            $available,
+            'Available Products' => $available,
         ]);
     }
 
@@ -45,6 +45,8 @@ class AvailableProductController extends Controller
             'qty' => 'required|integer',
         ]);
 
+        $validator->validated();
+
         $available = AvailableProduct::create([
             'product_id' => $product->id,
             'qty' => $request->qty,
@@ -52,7 +54,6 @@ class AvailableProductController extends Controller
 
         return response()->json($available, 200);
 
-        $validator->validated();
     }
 
 
