@@ -107,8 +107,8 @@ class ProductController extends Controller
         $available->qty = $request->qty;
 
         // Update Product
-        $product->save();
-        $available->save();
+        $product->save($request->all());
+//        $available->save();
 
         return response()->json([
             $product,
