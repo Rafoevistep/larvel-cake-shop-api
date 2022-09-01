@@ -108,7 +108,6 @@ class ProductController extends Controller
 
         // Update Product
         $product->save($request->all());
-//        $available->save();
 
         return response()->json([
             $product,
