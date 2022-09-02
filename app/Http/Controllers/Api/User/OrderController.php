@@ -145,6 +145,7 @@ class OrderController extends Controller
         ]);
     }
 
+
     public function show($id): \Illuminate\Http\JsonResponse
     {
         $items = OrderItem::where('order_id', $id)->with('product')->get()->toArray();

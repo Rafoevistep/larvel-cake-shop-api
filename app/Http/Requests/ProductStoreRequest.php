@@ -17,7 +17,6 @@ class ProductStoreRequest extends FormRequest
             if(request()->isMethod('product')) {
                 return [
                     'name' => 'required|string|max:25',
-                    'price' => 'integer|min:1',
                     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                     'description' => 'required|string|255',
                     'category_id'=> 'required|integer|exists:App\Models\Category,id',
@@ -26,7 +25,6 @@ class ProductStoreRequest extends FormRequest
             } else {
                 return [
                     'name' => 'required|string|max:25',
-                    'price' => 'integer|min:1',
                     'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                     'description' => 'required|string',
                     'category_id'=> 'required|integer|exists:App\Models\Category,id'
