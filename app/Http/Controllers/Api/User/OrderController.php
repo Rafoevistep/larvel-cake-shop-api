@@ -35,7 +35,7 @@ class OrderController extends Controller
             'landmark' => 'required|string|min:5',
             'city' => 'required|string|min:3',
             'total' => 'required|integer',
-            'qty' => 'required|string|min:1'
+            'qty' => 'required|integer|min:1'
         ]);
 
         $validator->validated();
@@ -101,7 +101,7 @@ class OrderController extends Controller
             'area' => 'required|string|min:5',
             'landmark' => 'required|string|min:5',
             'city' => 'required|string|min:3',
-            'qty' => 'required|string|min:1'
+            'qty' => 'required|integer|min:1'
         ]);
 
         $validator->validated();
@@ -167,7 +167,6 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         //Admin Change status Order
-
         $order = Order::find($id);
 
         $validator = Validator::make($request->all(), [
@@ -184,16 +183,13 @@ class OrderController extends Controller
 
         $order->status = $request->status;
 
-        if (!$order->status) {
-            return response()->json([
-                'message' => 'Nothing This Status',
-            ]);
-        }
         $order->save();
+
         return response()->json([
             'message' => 'Status Successfully Updated',
             'order' => $order
         ], 200);
+
     }
 
     public function cancel(Order $order): \Illuminate\Http\JsonResponse
