@@ -22,14 +22,14 @@ class EnquiryController extends Controller
     {
         //User can Send Enquary
         $validator = Validator::make($request->all(), [
-            'name' => 'required|name|min:3',
+            'name' => 'required|string|min:3',
             'email' => 'required|email',
-            'message' => 'required|message|min:10|max:255',
+            'message' => 'required|string|min:10|max:255',
         ]);
 
 
         $validator->validated();
-        
+
         $userId = auth('sanctum')->user()->id;
 
         $enquiry = Enquiry::create([

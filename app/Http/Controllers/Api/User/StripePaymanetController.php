@@ -60,7 +60,7 @@ class StripePaymanetController extends Controller
 
             return response()->json($response->status, 201);
         } catch (Exception $e) {
-            return response()->json([['responce' => 'Error']], 500);
+            return response()->json([['response' => 'Error']], 500);
         }
     }
 
