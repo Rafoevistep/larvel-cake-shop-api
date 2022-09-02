@@ -28,6 +28,7 @@ class ProductController extends Controller
     {
         $imageName = Str::random(32) . "." . $request->image->getClientOriginalExtension();
 
+
         // Create Product
         $product = Product::create([
             'category_id' => $request->category_id,

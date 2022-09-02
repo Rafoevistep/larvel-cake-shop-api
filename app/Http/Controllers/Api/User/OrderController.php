@@ -128,7 +128,7 @@ class OrderController extends Controller
             'city' => $request->city,
             'payment_method' => $request->payment_method,
             'qty' => $request->qty,
-            'total' => $product->price
+            'total' =>  $product->price
         ]);
 
         if ($checkout) {
