@@ -19,6 +19,8 @@ class StripePaymanetController extends Controller
         $validator = Validator::make($request->all(), [
             'number' => 'required|min:15|max:16',
             'cvc' => 'required|min:3|max:4',
+            'exp_month' => 'required|integer|min:1|max:12',
+            'exp_year' => 'integer|min:' . date("Y") . '|max:' . (date("Y")+5)
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -69,6 +71,8 @@ class StripePaymanetController extends Controller
         $validator = Validator::make($request->all(), [
             'number' => 'required|min:15|max:16',
             'cvc' => 'required|min:3|max:4',
+            'exp_month' => 'required|integer|min:1|max:12',
+            'exp_year' => 'integer|min:' . date("Y") . '|max:' . (date("Y")+5)
         ]);
         if ($validator->fails()) {
             return response()->json([
