@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Excel;
-use Illuminate\Validation\ValidationException;
 
 
 class OrderController extends Controller
@@ -23,7 +22,7 @@ class OrderController extends Controller
         $total_orders = Order::all();
 
         return response()->json([
-            'total' =>  $total_orders
+            'total' => $total_orders
         ]);
     }
 
@@ -35,7 +34,8 @@ class OrderController extends Controller
             'area' => 'required|string|min:5',
             'landmark' => 'required|string|min:5',
             'city' => 'required|string|min:3',
-            'total' => 'required|integer'
+            'total' => 'required|integer',
+            'qty' => 'required|string|min:1'
         ]);
 
         $validator->validated();
@@ -101,6 +101,7 @@ class OrderController extends Controller
             'area' => 'required|string|min:5',
             'landmark' => 'required|string|min:5',
             'city' => 'required|string|min:3',
+            'qty' => 'required|string|min:1'
         ]);
 
         $validator->validated();
@@ -162,6 +163,7 @@ class OrderController extends Controller
         ]);
     }
 
+
     public function update(Request $request, $id)
     {
         //Admin Change status Order
@@ -172,25 +174,26 @@ class OrderController extends Controller
             'status' => 'required|string|',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['message' => 'Status Not Updated']);
-        };
-
         $validator->validated();
+
+        if (!$order) {
+            return response()->json([
+                'message' => 'Order Not Found.'
+            ], 404);
+        }
 
         $order->status = $request->status;
 
-        if ($order->save()) {
+        if (!$order->status) {
             return response()->json([
-                'message' => 'Status Succesfily Updated',
-                'order' => $order
-            ], 200);
-        }else{
-            return response()->json([
-                'Error' => 'Status Nothing Updated',
-            ], 200);
+                'message' => 'Nothing This Status',
+            ]);
         }
-
+        $order->save();
+        return response()->json([
+            'message' => 'Status Successfully Updated',
+            'order' => $order
+        ], 200);
     }
 
     public function cancel(Order $order): \Illuminate\Http\JsonResponse
@@ -239,7 +242,6 @@ class OrderController extends Controller
             return response()->json(['Result' => 'No Data not found'], 404);
         }
     }
-
 
     public function get_orders_data()
     {
