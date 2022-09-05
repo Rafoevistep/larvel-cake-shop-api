@@ -77,13 +77,13 @@ class ProductController extends Controller
         // Find product
         $product = Product::find($id);
 
-        $available = AvailableProduct::where('product_id', $product->id)->first();
-
         if (!$product) {
             return response()->json([
                 'message' => 'Product Not Found.'
             ], 404);
         }
+
+        $available = AvailableProduct::where('product_id', $product->id)->first();
 
         $product->update($request->all());
         $available->update($request->all());
@@ -92,7 +92,7 @@ class ProductController extends Controller
             // Public storage
             $storage = Storage::disk('public');
 
-            // Old iamge delete
+            // Old image delete
             if ($storage->exists($product->image))
                 $storage->delete($product->image);
 
@@ -105,7 +105,7 @@ class ProductController extends Controller
         }
 
         return response()->json([
-            'Product Updated Succesfily' => $product,
+            'Product Updated Successfully' => $product,
             'Available In Bakery' => $available,
         ], 200);
     }
