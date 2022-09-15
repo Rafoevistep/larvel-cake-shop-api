@@ -57,10 +57,9 @@ Route::group([
     Route::controller(AuthController::class)->group(function () {
         Route::post('/login', 'login');
         Route::post('/register', 'register');
-        Route::post('/logout', 'logout')->middleware('auth:sanctum');
+        Route::get('/logout', 'logout')->middleware('auth:sanctum');
         Route::get('/user', 'user')->middleware('auth:sanctum');
     });
-
 
     Route::post('/stripe/{product}', [StripePaymanetController::class, 'stripeBuyNow']);
     Route::post('/stripe', [StripePaymanetController::class, 'stripeChekoutCard']);
@@ -74,6 +73,7 @@ Route::post('/profile/update-profile', [ProfileController::class, 'update_profil
 
 Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'index');
+    Route::get('/products/available', 'indexAvailableProduct');
     Route::get('/products/{product}', 'show');
     Route::get('/products/search/{name}', 'search');
 });
@@ -87,11 +87,6 @@ Route::get('/about', [AboutUsPageController::class, 'index']);
 Route::get('/contact', [ContactPageController::class, 'index']);
 
 Route::post('/subscripe', [NewsletterControoler::class, 'store']);
-
-Route::controller(AvailableProductController::class)->group(function () {
-    Route::get('/aviable', 'index');
-    Route::get('/aviable/{aviable}', 'show');
-});
 
 
 Route::get('/order/search/{order}', [OrderController::class, 'search']);
@@ -121,7 +116,7 @@ Route::group([
     Route::controller(ProductController::class)->group(function () {
         Route::get('/products', 'index');
         Route::get('/products/{product}', 'show');
-        Route::post('/products', 'store');
+        Route::post('/products-create', 'store');
         Route::put('/products/{product}', 'update');
         Route::delete('/products/{product}', 'destroy');
     });
@@ -129,24 +124,15 @@ Route::group([
     Route::controller(AboutUsPageController::class)->group(function () {
         Route::get('/about', 'index');
         Route::post('/about', 'store');
-        Route::delete('/about/{about}', 'destroy');
     });
 
     Route::controller(ContactPageController::class)->group(function () {
         Route::get('/contact', 'index');
         Route::post('/contact', 'store');
-        Route::delete('/contact/{contact}', 'destroy');
     });
 
     Route::get('/subscripe', [NewsletterControoler::class, 'index']);
 
-    Route::controller(AvailableProductController::class)->group(function () {
-        Route::get('/aviable', 'index');
-        Route::get('/aviable/{aviable}', 'show');
-        Route::post('/aviable/{aviable}', 'store');
-        Route::delete('/aviable/{aviable}', 'destroy');
-        Route::put('/aviable/{aviable}', 'update');
-    });
 
     Route::get('enquary', [EnquiryController::class, 'index']);
 

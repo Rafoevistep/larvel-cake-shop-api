@@ -42,8 +42,4 @@ class AboutUsPageController extends Controller
 
     }
 
-    public function destroy($id)
-    {
-        //
-    }
 }

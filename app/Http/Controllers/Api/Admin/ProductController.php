@@ -145,4 +145,15 @@ class ProductController extends Controller
             return response()->json(['Result' => 'No Data not found'], 404);
         }
     }
+
+    public function indexAvailableProduct(): \Illuminate\Http\JsonResponse
+    {
+        //Show Avilable Products
+        $available = AvailableProduct::where('qty', '>=', 1)->get();
+
+        return response()->json([
+            'message' => 'Available in the bakery',
+            'Available Products' => $available,
+        ]);
+    }
 }
