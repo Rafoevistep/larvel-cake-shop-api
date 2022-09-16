@@ -4,9 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Cart;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class CartTest extends TestCase
@@ -18,17 +16,11 @@ class CartTest extends TestCase
     }
 
      function test_add_to_cart()
-        {
+     {
+
         $this->loginSingleUser();
 
-        $product = Product::create([
-            'name' => "New Product",
-            'description' => "This is a product",
-            'category_id' => '1',
-            'price' => '30',
-            'image' => UploadedFile::fake()->image('photo.jpg'),
-            'qty' => 10
-        ]);
+        $product = Product::factory()->create();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
@@ -43,16 +35,9 @@ class CartTest extends TestCase
 
     public function test_delete_from_cart()
     {
-       $user = $this->loginSingleUser();
+        $this->loginSingleUser();
 
-        $product = Product::create([
-            'name' => "New Product",
-            'description' => "This is a product",
-            'category_id' => '1',
-            'price' => '30',
-            'image' => UploadedFile::fake()->image('photo.jpg'),
-            'qty' => 10
-        ]);
+        $product = Product::factory()->create();
 
         $cart = Cart::create([
             'user_id' => $this->authUser['id'],

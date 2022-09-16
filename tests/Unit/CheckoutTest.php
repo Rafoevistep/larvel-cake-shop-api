@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Product;
 use Tests\TestCase;
 
 
@@ -11,10 +12,12 @@ class CheckoutTest extends TestCase
     {
         $this->loginSingleUser();
 
+        $product = Product::factory()->create();
+
         $addToCart = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept' , 'application/json')
-            ->post('api/auth/cart/10', [
+            ->post("api/auth/cart/{$product->id}", [
                 'qty' => 2
             ]);
 
@@ -37,10 +40,12 @@ class CheckoutTest extends TestCase
     {
         $this->loginUser();
 
+        $product = Product::factory()->create();
+
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->post('/api/auth/checkout/211', [
+            ->post("/api/auth/checkout/{$product->id}", [
                 'flat' => 'flatFlat',
                 'street_name' => 'Street Name',
                 'area' => 'areaArea',
@@ -94,8 +99,6 @@ class CheckoutTest extends TestCase
             ->withHeader('Accept', 'application/json')
             ->get('api/auth/myorder/order_export');
 
-//        dd($response->getData());
-//        $response->assertDownload();
         $response->assertStatus(200);
 
     }

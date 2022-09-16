@@ -2,17 +2,22 @@
 
 namespace Tests\Unit;
 
+use App\Models\Product;
 use Tests\TestCase;
 
 class StripePaymentTest extends TestCase
 {
+
     public function test_single_product_checkoutStripe()
     {
         $this->loginSingleUser();
+
+        $product = Product::factory()->create();
+
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->post('api/auth/stripe/3', [
+            ->post("api/auth/stripe/{$product->id}", [
                 'number' => '4242424242424242',
                 'exp_month' => '12',
                 'exp_year' => '2022',
@@ -45,12 +50,15 @@ class StripePaymentTest extends TestCase
     {
         $this->loginSingleUser();
 
+        $product = Product::factory()->create();
+
         $addToCart = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept' , 'application/json')
-            ->post('api/auth/cart/10', [
+            ->post("api/auth/cart/{$product->id}", [
                 'qty' => 2
         ]);
+
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
