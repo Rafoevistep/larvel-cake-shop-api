@@ -2,10 +2,13 @@
 
 namespace Tests\Unit;
 
+use App\Models\Category;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CategoryTest extends TestCase
 {
+    use WithFaker;
 
     public function setUp(): void
     {
@@ -91,10 +94,14 @@ class CategoryTest extends TestCase
     {
         $user = $this->loginAdmin();
 
+        $category = Category::create([
+            'name' => $this->faker->text('15',)
+        ]);
+
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->delete('/api/admin/categoty/30');
+            ->delete("/api/admin/categoty/{$category->id}");
 
         $response->assertStatus(200);
 

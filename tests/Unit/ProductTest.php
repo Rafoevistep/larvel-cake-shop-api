@@ -2,11 +2,14 @@
 
 namespace Tests\Unit;
 
+use App\Models\Product;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 
 class ProductTest extends TestCase
 {
+    use WithFaker;
 
     public function setUp(): void
     {
@@ -108,10 +111,19 @@ class ProductTest extends TestCase
 
         $user = $this->loginAdmin();
 
+        $product = Product::create([
+            'name' => "New Product",
+            'description' => "This is a product",
+            'category_id' => '1',
+            'price' => '30',
+            'image' => UploadedFile::fake()->image('photo.jpg'),
+            'qty' => 10
+        ]);
+
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept' , 'application/json')
-            ->delete('api/admin/products/268');
+            ->delete("api/admin/products/{$product->id}");
 
         $response->assertStatus(200);
     }

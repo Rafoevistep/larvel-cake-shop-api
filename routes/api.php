@@ -111,6 +111,7 @@ Route::group([
         Route::post('/categoty', 'store');
         Route::put('/categoty/{categoty}', 'update');
         Route::delete('/categoty/{categoty}', 'destroy');
+        Route::delete('/category/delete/{id}', 'test_delete_category');
     });
 
     Route::controller(ProductController::class)->group(function () {
