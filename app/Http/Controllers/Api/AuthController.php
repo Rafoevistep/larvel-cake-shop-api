@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class AuthController extends Controller
@@ -18,7 +20,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
 
         $validator = Validator::make($request->all(), [
@@ -52,7 +54,7 @@ class AuthController extends Controller
     }
 
 
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -92,7 +94,7 @@ class AuthController extends Controller
         }
     }
 
-    public function user(Request $request)
+    public function user(Request $request): JsonResponse
     {
         return response()->json([
             'message' => 'User successfully fetched',
@@ -100,14 +102,12 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // public function userProfile() {
-    //     return response()->json(auth()->user());
-    // }
 
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
-
         $request->user()->currentAccessToken()->delete();
+//        Auth::logout();
+
         return response()->json([
             'message' => 'User successfully logged out',
         ], 200);

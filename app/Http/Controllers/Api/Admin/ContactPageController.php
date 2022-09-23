@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactPage;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ContactPageController extends Controller
 {
-    public function index()
+    public function index(): JsonResponse
     {
         //Show Contact  Information
         $about = ContactPage::latest()->first();
@@ -17,7 +18,7 @@ class ContactPageController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'address' => 'required|string|min:5',
@@ -40,7 +41,7 @@ class ContactPageController extends Controller
         } else {
             return response()->json(['message' => 'You have already added Information in Contact Page']);
         }
-        
+
     }
 
 }

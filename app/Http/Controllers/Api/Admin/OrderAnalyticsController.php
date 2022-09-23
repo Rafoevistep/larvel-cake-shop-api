@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
+use Illuminate\Http\JsonResponse;
 
 class OrderAnalyticsController extends Controller
 {
-    public function total(): \Illuminate\Http\JsonResponse
+    public function total(): JsonResponse
     {
         $total_orders = Order::all();
 
@@ -18,7 +19,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function notConfirmed(): \Illuminate\Http\JsonResponse
+    public function notConfirmed(): JsonResponse
     {
         $not_confirmed = Order::where(['status' => 'pending'])->get();
 
@@ -28,7 +29,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function cancelled(): \Illuminate\Http\JsonResponse
+    public function cancelled(): JsonResponse
     {
         $cancelled = Order::where(['status' => 'cancelled'])->get();
 
@@ -38,7 +39,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function completed(): \Illuminate\Http\JsonResponse
+    public function completed(): JsonResponse
     {
         $completed = Order::where(['status' => 'completed'])->get();
 
@@ -48,7 +49,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function prepeared(): \Illuminate\Http\JsonResponse
+    public function prepeared(): JsonResponse
     {
         $prepeared = Order::where(['status' => 'being_prepeared'])->get();
 
@@ -58,7 +59,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function pickup(): \Illuminate\Http\JsonResponse
+    public function pickup(): JsonResponse
     {
         $pickup = Order::where(['status' => 'pickup'])->get();
 
@@ -68,7 +69,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function deleveried(): \Illuminate\Http\JsonResponse
+    public function deleveried(): JsonResponse
     {
         $deleveried = Order::where(['status' => 'deleveried'])->get();
 
@@ -78,7 +79,7 @@ class OrderAnalyticsController extends Controller
         ]);
     }
 
-    public function showSales(): \Illuminate\Http\JsonResponse
+    public function showSales(): JsonResponse
     {
         $order = Order::all();
 

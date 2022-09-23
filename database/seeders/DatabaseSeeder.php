@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,17 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('12345678'),
             'phone' => '77777777',
             'is_admin' => '1',
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        ]);
+
+        DB::table('users')->insert([
+            'last_name' => 'user',
+            'first_name' => 'useryan',
+            'email' => 'user@gmail.com',
+            'password' => Hash::make('12345678'),
+            'phone' => '77777777',
+            'is_admin' => null,
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         ]);

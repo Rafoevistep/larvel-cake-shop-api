@@ -3,17 +3,16 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Models\Product;
 use App\Http\Requests\ProductStoreRequest;
 use App\Models\AvailableProduct;
-use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(): JsonResponse
     {
         // All Product
         $products = Product::all();
@@ -24,10 +23,9 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function store(ProductStoreRequest $request): \Illuminate\Http\JsonResponse
+    public function store(ProductStoreRequest $request): JsonResponse
     {
         $imageName = Str::random(32) . "." . $request->image->getClientOriginalExtension();
-
 
         // Create Product
         $product = Product::create([
@@ -53,7 +51,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function show($id): \Illuminate\Http\JsonResponse
+    public function show(int $id): JsonResponse
     {
         // Product Detail
         $product = Product::find($id);
@@ -72,7 +70,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function update(ProductStoreRequest $request, $id): \Illuminate\Http\JsonResponse
+    public function update(ProductStoreRequest $request, $id): JsonResponse
     {
         // Find product
         $product = Product::find($id);
@@ -83,10 +81,14 @@ class ProductController extends Controller
             ], 404);
         }
 
-        $available = AvailableProduct::where('product_id', $product->id)->first();
+//        $available = AvailableProduct::where('product_id', $product->id)->first();
 
-        $product->update($request->all());
+        $available = AvailableProduct::where('product_id', $product->id)->first();
+        $available = new AvailableProduct();
+        $available->qty = $request->qty;
+//        $available->save();
         $available->update($request->all());
+        $product->update($request->all());
 
         if ($request->image) {
             // Public storage
@@ -110,7 +112,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function destroy($id): \Illuminate\Http\JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         // Detail
         $product = Product::find($id);
@@ -136,7 +138,7 @@ class ProductController extends Controller
         ], 200);
     }
 
-    function search($name): \Illuminate\Http\JsonResponse
+    function search($name): JsonResponse
     {
         $result = Product::where('name', 'LIKE', '%' . $name . '%')->get();
         if (count($result)) {
@@ -146,7 +148,7 @@ class ProductController extends Controller
         }
     }
 
-    public function indexAvailableProduct(): \Illuminate\Http\JsonResponse
+    public function indexAvailableProduct(): JsonResponse
     {
         //Show Avilable Products
         $available = AvailableProduct::where('qty', '>=', 1)->get();

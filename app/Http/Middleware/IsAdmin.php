@@ -17,11 +17,11 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-
         if(auth('sanctum')->user() && auth('sanctum')->user()->is_admin == 1)
         {
             return $next($request);
         }
+
         return response()->json([
             'message'=>'You Are Not Admin',
         ],400);

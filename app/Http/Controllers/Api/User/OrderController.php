@@ -12,12 +12,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Excel;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class OrderController extends Controller
 {
 
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(): JsonResponse
     {
         $total_orders = Order::all();
 
@@ -26,7 +27,7 @@ class OrderController extends Controller
         ]);
     }
 
-    public function store(Request $request): \Illuminate\Http\JsonResponse
+    public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'flat' => 'required|string|min:5',
@@ -93,7 +94,7 @@ class OrderController extends Controller
     }
 
 
-    public function storeSingle(Request $request, $id): \Illuminate\Http\JsonResponse
+    public function storeSingle(Request $request, int $id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'flat' => 'required|string|min:5',
@@ -146,7 +147,7 @@ class OrderController extends Controller
     }
 
 
-    public function show($id): \Illuminate\Http\JsonResponse
+    public function show(int $id): JsonResponse
     {
         $items = OrderItem::where('order_id', $id)->with('product')->get()->toArray();
 
@@ -165,7 +166,7 @@ class OrderController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request,int $id): JsonResponse
     {
         //Admin Change status Order
         $order = Order::find($id);
@@ -193,7 +194,7 @@ class OrderController extends Controller
 
     }
 
-    public function cancel(Order $order): \Illuminate\Http\JsonResponse
+    public function cancel(Order $order): JsonResponse
     {
         if (auth('sanctum')->user()) {
             $order->status = 'cancelled';
@@ -212,7 +213,7 @@ class OrderController extends Controller
         }
     }
 
-    public function myorder(): \Illuminate\Http\JsonResponse
+    public function myorder(): JsonResponse
     {
         //User Orders
         $user_id = auth('sanctum')->user()->id;
@@ -229,7 +230,7 @@ class OrderController extends Controller
         }
     }
 
-    function search($order): \Illuminate\Http\JsonResponse
+    function search($order): JsonResponse
     {
         $result = Order::where('order_number', 'LIKE', '%' . $order . '%')->get();
 

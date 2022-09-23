@@ -14,10 +14,13 @@ class CategoryTest extends TestCase
     {
         parent::setUp();
         $this->assertTrue(TRUE);
+
     }
 
     public function test_category()
     {
+        Category::factory()->create();
+
         $response = $this->get('/api/categoty');
 
         $response->status(200);
@@ -28,7 +31,9 @@ class CategoryTest extends TestCase
 
     public function test_single_category()
     {
-        $response = $this->get('/api/categoty/1');
+        $category = Category::factory()->create();
+
+        $response = $this->get("/api/categoty/$category->id");
 
         $response->status(200);
 
@@ -48,7 +53,7 @@ class CategoryTest extends TestCase
 
     public function test_create_category()
     {
-        $user = $this->loginAdmin();
+        $this->loginAdmin();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
@@ -64,25 +69,29 @@ class CategoryTest extends TestCase
 
     public function test_update_category()
     {
-        $user = $this->loginAdmin();
+        $this->loginAdmin();
+
+        $category = Category::factory()->create();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->put('/api/admin/categoty/3', [
-                'name' => "Birthday Cake Update",
+            ->put("/api/admin/categoty/$category->id", [
+                'name' =>  $this->faker->text(15) . ' Updated',
             ]);
         $response->assertStatus(200);
     }
 
     public function test_update_category_validation()
     {
-        $user = $this->loginAdmin();
+        $this->loginAdmin();
+
+        $category = Category::factory()->create();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->put('/api/admin/categoty/3', [
+            ->put("/api/admin/categoty/$category->id", [
                 'name' => "",
             ]);
 
@@ -92,16 +101,14 @@ class CategoryTest extends TestCase
 
     public function test_delete_category()
     {
-        $user = $this->loginAdmin();
+        $this->loginAdmin();
 
-        $category = Category::create([
-            'name' => $this->faker->text('15',)
-        ]);
+        $category = Category::factory()->create();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->delete("/api/admin/categoty/{$category->id}");
+            ->delete("/api/admin/categoty/$category->id");
 
         $response->assertStatus(200);
 

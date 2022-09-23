@@ -10,7 +10,7 @@ class StripePaymentTest extends TestCase
 
     public function test_single_product_checkoutStripe()
     {
-        $this->loginSingleUser();
+        $this->loginUser();
 
         $product = Product::factory()->create();
 
@@ -30,7 +30,7 @@ class StripePaymentTest extends TestCase
 
     public function test_single_product_checkoutStripe_validation()
     {
-        $this->loginSingleUser();
+        $this->loginUser();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
@@ -48,7 +48,7 @@ class StripePaymentTest extends TestCase
 
     public function test_cart_product_checkoutStripe()
     {
-        $this->loginSingleUser();
+        $this->loginUser();
 
         $product = Product::factory()->create();
 
@@ -76,7 +76,7 @@ class StripePaymentTest extends TestCase
 
     public function test_cart_product_checkoutStripe_validation()
     {
-        $this->loginSingleUser();
+        $this->loginUser();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)

@@ -2,30 +2,28 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class SubscripesTest extends TestCase
 {
+    use WithFaker;
+
    public function test_user_subscribe_with_email()
    {
-        $user =  $this->loginUser();
-
-        $response = $this
-            ->withHeader('Authorization', 'Bearer ' . $this->authToken)
-            ->withHeader('Accept', 'application/json')
-            ->post('api/subscripe', [
-                'email' => "user5@gmail.com"
-            ]);
+        $response = $this->withHeader('Accept', 'application/json')
+        ->post('api/subscripe', [
+            'email' => $this->faker->email
+        ]);
 
         $response->assertStatus(200);
+
    }
 
     public function test_get_subscribe_email_empty_validation()
     {
-        $user =  $this->loginUser();
 
         $response = $this
-            ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
             ->post('api/subscripe', [
                 'email' => ""
@@ -36,11 +34,13 @@ class SubscripesTest extends TestCase
 
     public function test_show_subscribe_emails()
     {
-        $user =  $this->loginAdmin();
+       $admin = $this->loginAdmin();
+
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->get('api/admin/subscripe');
+
 
         $response->assertStatus(200);
     }

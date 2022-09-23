@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AboutPage;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class AboutUsPageController extends Controller
 {
 
-    public function index()
+    public function index(): JsonResponse
     {
         //Show About us Information
         $about = AboutPage::latest()->first();
@@ -18,7 +19,7 @@ class AboutUsPageController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|min:5',

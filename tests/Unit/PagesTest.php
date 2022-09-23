@@ -2,10 +2,12 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class PagesTest extends TestCase
 {
+    use WithFaker;
 
     public function test_create_about_page()
     {
@@ -15,8 +17,8 @@ class PagesTest extends TestCase
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
             ->post('api/admin/about', [
-                'name' => "Who are we? ",
-                'description' => "The Cake Shop is a Jordanian Brand that started as a small family business.The owners are Dr. Iyad Sultan and Dr. Sereen Sharabati, supported by a staff of 80 employees.Although not small any more, the business tries to keep the family atmosphere where we care not only about our company, our products and our staff, but also we consider each customer a member in this family of cake shoppers.Our mission is to make people happy. Making delicious cakes, having relaxing chairs in a smoking free environment and keeping our prices reasonable are all different ways to achieve this goal.",
+                'name' => $this->faker->realTextBetween(10,20),
+                'description' => $this->faker->realTextBetween(20,50),
             ]);
 
         $response->assertStatus(200);
@@ -55,9 +57,9 @@ class PagesTest extends TestCase
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
             ->post('api/admin/contact', [
-                'address' => "Lorem Ipsum has been the industry's standard ",
-                'phone' => "+9627751553001",
-                'email' => "cakeshop@mail.ru"
+                'address' => $this->faker->address,
+                'phone' => $this->faker->phoneNumber,
+                'email' => $this->faker->email,
             ]);
 
         $response->assertStatus(200);

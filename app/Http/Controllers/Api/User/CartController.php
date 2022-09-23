@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
 
-    public function index()
+    public function index(): JsonResponse
     {
         $userId = auth('sanctum')->user()->id;
 
@@ -34,7 +35,7 @@ class CartController extends Controller
     }
 
 
-    public function store(Request $request, Product $product)
+    public function store(Request $request, Product $product): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'qty' => 'required|integer|',
@@ -72,7 +73,7 @@ class CartController extends Controller
     }
 
 
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
         //Deleting From cart
         $cart = Cart::find($id);

@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Models\NewsletterSubscribers;
 use Darryldecode\Cart\Validators\Validator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NewsletterControoler extends Controller
 {
 
-    public function index()
+    public function index(): JsonResponse
     {
         //Show Shubscropes Emails
 

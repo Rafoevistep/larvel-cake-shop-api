@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\CreateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
 
-    public function index()
+    public function index(): JsonResponse
     {
         $categories = Category::all();
 
@@ -20,7 +20,7 @@ class CategoryController extends Controller
     }
 
 
-    public function show($id)
+    public function show(int $id)
     {
         // Category Detail
         $category = Category::find($id);
@@ -39,7 +39,7 @@ class CategoryController extends Controller
 
 
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|min:5',
@@ -51,22 +51,20 @@ class CategoryController extends Controller
 
         $validator->validated();
 
-        $category = new Category;
 
-        $category->name = $request->name;
+        $category = Category::firstOrCreate([
+           'name' => $request->name
+        ]);
 
-        if ($category->save()) {
-            return response()->json([
-                'message' => 'Category Added Successfully.',
-                'Category' => $category
-            ], 200);
-        }
+        return response()->json([
+            'message' => 'Category Added Successfully.',
+            'Category' => $category
+        ]);
 
-        return response()->json(['message' => 'Anible Add Catagory']);
     }
 
 
-    public function update(Request $request, Category $category,$id)
+    public function update(Request $request, Category $category,$id): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|min:3',
@@ -87,7 +85,7 @@ class CategoryController extends Controller
     }
 
 
-    public function destroy(Category $category, $id)
+    public function destroy(Category $category,int $id): JsonResponse
     {
         // Detail
         $category = Category::find($id);

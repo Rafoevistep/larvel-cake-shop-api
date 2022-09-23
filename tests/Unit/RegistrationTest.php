@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 
@@ -71,7 +70,7 @@ class RegistrationTest extends TestCase
             ->post('api/auth/register', [
                 'last_name' => $this->faker->lastName(),
                 'first_name' => $this->faker->firstName(),
-                'email' => 'user@gmail.com',
+                'email' => $this->faker->email(),
                 'password' => '123456789' ,
                 'confirm_password' => '12345678',
                 'phone' => $this->faker->buildingNumber(),

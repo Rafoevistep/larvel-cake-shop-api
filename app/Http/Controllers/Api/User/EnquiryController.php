@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Enquiry;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class EnquiryController extends Controller
 {
-    public function index()
+    public function index(): JsonResponse
     {
         //Wiew All Enquary
 
@@ -18,7 +19,7 @@ class EnquiryController extends Controller
         return response()->json($enquiry);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         //User can Send Enquary
         $validator = Validator::make($request->all(), [

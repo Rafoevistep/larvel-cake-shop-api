@@ -118,7 +118,7 @@ Route::group([
         Route::get('/products', 'index');
         Route::get('/products/{product}', 'show');
         Route::post('/products-create', 'store');
-        Route::put('/products/{product}', 'update');
+        Route::put('/product-update/{product}', 'update');
         Route::delete('/products/{product}', 'destroy');
     });
 

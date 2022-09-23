@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\Models\Cart;
 use App\Models\Product;
-use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class CartTest extends TestCase
@@ -17,8 +16,7 @@ class CartTest extends TestCase
 
      function test_add_to_cart()
      {
-
-        $this->loginSingleUser();
+         $user = $this->loginUser();
 
         $product = Product::factory()->create();
 
@@ -29,13 +27,14 @@ class CartTest extends TestCase
                 'qty' => 2
             ]);
 
+
         $response->assertStatus(200);
 
     }
 
     public function test_delete_from_cart()
     {
-        $this->loginSingleUser();
+        $this->loginUser();
 
         $product = Product::factory()->create();
 

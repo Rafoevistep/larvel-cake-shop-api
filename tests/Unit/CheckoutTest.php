@@ -2,15 +2,20 @@
 
 namespace Tests\Unit;
 
+use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 
 class CheckoutTest extends TestCase
 {
+    use WithFaker;
+
     public function test_cart_checkout()
     {
-        $this->loginSingleUser();
+        $this->loginUser();
 
         $product = Product::factory()->create();
 
@@ -25,12 +30,13 @@ class CheckoutTest extends TestCase
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
             ->post('api/auth/checkout', [
-                'flat' => 'flatFlat',
-                'street_name' => 'Street Name',
-                'area' => 'areaArea',
-                'landmark' => 'landmark',
-                'city' => 'Yerevan',
-                'payment_method' => 'cash_on_delivery'
+                'flat' => $this->faker->city,
+                'street_name' => $this->faker->streetName,
+                'area' => $this->faker->streetName,
+                'landmark' => $this->faker->streetAddress,
+                'city' => $this->faker->city,
+                'payment_method' => 'cash_on_delivery',
+                'qty' => $this->faker->numberBetween(10, 20),
             ]);
 
         $response->assertStatus(200);
@@ -46,13 +52,13 @@ class CheckoutTest extends TestCase
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
             ->post("/api/auth/checkout/{$product->id}", [
-                'flat' => 'flatFlat',
-                'street_name' => 'Street Name',
-                'area' => 'areaArea',
-                'landmark' => 'landmark',
-                'city' => 'Yerevan',
+                'flat' => $this->faker->city,
+                'street_name' => $this->faker->streetName,
+                'area' => $this->faker->streetName,
+                'landmark' => $this->faker->streetAddress,
+                'city' => $this->faker->city,
                 'payment_method' => 'cash_on_delivery',
-                'qty' => 1
+                'qty' => $this->faker->numberBetween(10, 20),
             ]);
 
         $response->assertStatus(200);
@@ -60,12 +66,24 @@ class CheckoutTest extends TestCase
 
     public function test_cancel_order()
     {
-        $this->loginSingleUser();
+        $this->loginUser();
+
+        $order = Order::create([
+                'order_number' => Str::uuid(),
+                'user_id' => $this->authUser['id'],
+                'flat' => $this->faker->city,
+                'street_name' => $this->faker->streetName,
+                'area' => $this->faker->streetName,
+                'landmark' => $this->faker->streetAddress,
+                'city' => $this->faker->city,
+                'payment_method' => 'cash_on_delivery',
+                'qty' => $this->faker->numberBetween(10, 20),
+        ]);
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->put('api/auth/myorder/cancel/12', [
+            ->put("api/auth/myorder/cancel/$order->id", [
                 'status' => 'cancelled',
             ]);
 
@@ -74,7 +92,8 @@ class CheckoutTest extends TestCase
 
     public function test_my_orders()
     {
-        $this->loginSingleUser();
+        $this->loginUser();
+
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
@@ -87,13 +106,28 @@ class CheckoutTest extends TestCase
 
     public function test_search_order()
     {
-        $response = $this->get('api/order/search/f78bdcd9-5645-4ca7-8149-343c7e21c34c');
+        $this->loginUser();
+
+        $order = Order::create([
+            'order_number' => Str::uuid(),
+            'user_id' => $this->authUser['id'],
+            'flat' => $this->faker->city,
+            'street_name' => $this->faker->streetName,
+            'area' => $this->faker->streetName,
+            'landmark' => $this->faker->streetAddress,
+            'city' => $this->faker->city,
+            'payment_method' => 'cash_on_delivery',
+            'qty' => $this->faker->numberBetween(10, 20),
+        ]);
+
+        $response = $this->get("api/order/search/$order->order_number");
         $response->assertStatus(200);
     }
 
     public function test_my_order_download()
     {
-        $this->loginSingleUser();
+        $this->loginUser();
+
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
