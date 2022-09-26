@@ -12,6 +12,26 @@ class ProductTest extends TestCase
 {
     use WithFaker;
 
+    const PRODUCT_STRUCTURE = [
+        'id',
+        'category_id',
+        'name',
+        'image',
+        'price',
+        'description',
+        'updated_at',
+        'created_at'
+    ];
+
+    const PRODUCT_AVAILABLE_STRUCTURE =
+        [
+            'id',
+            'product_id',
+            'qty',
+            'updated_at',
+            'created_at',
+        ];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -32,9 +52,10 @@ class ProductTest extends TestCase
 
         $response = $this->get("api/products/$product->id");
 
-        $response->status(200);
-
-
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'product' => self::PRODUCT_STRUCTURE,
+            ]);
     }
 
     public function test_products_not_found()
@@ -42,7 +63,6 @@ class ProductTest extends TestCase
         $response = $this->get('api/products/999');
 
         $response->status(404);
-
 
     }
 
@@ -62,9 +82,12 @@ class ProductTest extends TestCase
                 'price' => $this->faker->numberBetween(100, 200),
                 'image' => UploadedFile::fake()->image('photo.jpg'),
                 'qty' => $this->faker->numberBetween(10, 20),
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'product' => self::PRODUCT_STRUCTURE,
+                'product_available' => self::PRODUCT_AVAILABLE_STRUCTURE
             ]);
-
-        $response->assertStatus(200);
 
     }
 
@@ -105,9 +128,12 @@ class ProductTest extends TestCase
                 'price' => $this->faker->numberBetween(100, 200),
                 'image' => UploadedFile::fake()->image('photo.jpg'),
                 'qty' => $this->faker->numberBetween(10, 20),
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'Product Updated Successfully' => self::PRODUCT_STRUCTURE,
+                'Available In Bakery'
             ]);
-
-        $response->assertStatus(200);
     }
 
 
@@ -128,22 +154,31 @@ class ProductTest extends TestCase
 
     public function test_show_available_product()
     {
-        $product = Product::factory()->create();
-
-        $response = $this->get("api/products/$product->id");
-
-        $response->assertStatus(200);
-
+        $response = $this->get("api/products/available")
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'Available Products' => [
+                    '*' => [
+                        "id",
+                        "product_id",
+                        "qty",
+                        "created_at",
+                        "updated_at"
+                    ],
+                ],
+            ]);
     }
 
     public function test_search_product()
     {
         $product = Product::factory()->create();
 
-        $response = $this->get("/api/products/search/$product->name");
-
-        $response->assertStatus(200);
-
+        $response = $this->get("/api/products/search/$product->name")
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                 self::PRODUCT_STRUCTURE,
+            ]);;
     }
 
     public function test_search_product_not_found()

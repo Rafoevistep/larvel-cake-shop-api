@@ -9,14 +9,24 @@ class SubscripesTest extends TestCase
 {
     use WithFaker;
 
+    const SUBSCRIBE_STRUCTURE = [
+        "id",
+        "email",
+        "updated_at",
+        "created_at",
+    ];
+
    public function test_user_subscribe_with_email()
    {
         $response = $this->withHeader('Accept', 'application/json')
         ->post('api/subscripe', [
             'email' => $this->faker->email
+        ])
+        ->assertStatus(200)
+        ->assertJsonStructure([
+            'message',
+            'info' => self::SUBSCRIBE_STRUCTURE
         ]);
-
-        $response->assertStatus(200);
 
    }
 
@@ -39,9 +49,11 @@ class SubscripesTest extends TestCase
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
-            ->get('api/admin/subscripe');
+            ->get('api/admin/subscripe')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                    self::SUBSCRIBE_STRUCTURE
+            ]);
 
-
-        $response->assertStatus(200);
     }
 }

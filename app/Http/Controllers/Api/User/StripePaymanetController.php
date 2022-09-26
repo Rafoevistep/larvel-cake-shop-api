@@ -36,7 +36,7 @@ class StripePaymanetController extends Controller
 
         try {
             $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET')
+                config('services.stripe.secret')
             );
 
             $res = $stripe->tokens->create([
@@ -48,7 +48,7 @@ class StripePaymanetController extends Controller
                 ],
             ]);
 
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
             $response = $stripe->charges->create([
                 'amount' => $product->price * 100,
@@ -88,7 +88,7 @@ class StripePaymanetController extends Controller
 
         try {
             $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET')
+                config('services.stripe.secret')
             );
 
             $res = $stripe->tokens->create([
@@ -100,7 +100,7 @@ class StripePaymanetController extends Controller
                 ],
             ]);
 
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
 
             $response = $stripe->charges->create([
                 'amount' => $total * 100,

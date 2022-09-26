@@ -23,9 +23,19 @@ class RegistrationTest extends TestCase
                 'password' => '12345678' ,
                 'confirm_password' => '12345678',
                 'phone' => $this->faker->buildingNumber(),
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                 'data' => [
+                    'id',
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "phone",
+                    "updated_at",
+                    "created_at",
+                 ]
             ]);
-
-        $response->assertStatus(200);
     }
 
 

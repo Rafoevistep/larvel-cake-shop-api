@@ -34,12 +34,9 @@ class AboutUsPageController extends Controller
             'description' => $request->description,
         ]);
 
-        if ($about == null) {
+
             // Return Json Response
             return response()->json($about, 200);
-        } else {
-            return response()->json(['message' => 'You have already added Information in About Page']);
-        }
 
     }
 

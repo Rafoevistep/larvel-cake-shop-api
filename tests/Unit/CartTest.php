@@ -8,6 +8,19 @@ use Tests\TestCase;
 
 class CartTest extends TestCase
 {
+    const CART_STRUCTURE = [
+        "id",
+        "user_id",
+        "product_id",
+        "name",
+        "image",
+        "price",
+        "description",
+        "qty",
+        "updated_at",
+        "created_at",
+    ];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -25,11 +38,11 @@ class CartTest extends TestCase
             ->withHeader('Accept' , 'application/json')
             ->post("api/auth/cart/{$product->id}", [
                 'qty' => 2
-            ]);
-
-
-        $response->assertStatus(200);
-
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure(
+               self::CART_STRUCTURE
+            );
     }
 
     public function test_delete_from_cart()
@@ -61,12 +74,27 @@ class CartTest extends TestCase
     {
         $this->loginUser();
 
+        $product = Product::factory()->create();
+
+        $AddToCart = $this
+            ->withHeader('Authorization', 'Bearer ' . $this->authToken)
+            ->withHeader('Accept' , 'application/json')
+            ->post("api/auth/cart/{$product->id}", [
+                'qty' => 2
+            ]);
+
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept' , 'application/json')
-            ->get('api/auth/cart');
-
-        $response->assertStatus(200);
-
+            ->get('api/auth/cart')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'total',
+                'cart' => [
+                    '*' => self::CART_STRUCTURE
+                ]
+            ]);
     }
+
 }

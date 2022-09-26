@@ -10,6 +10,13 @@ class CategoryTest extends TestCase
 {
     use WithFaker;
 
+    const CATEGORY_STRUCTURE = [
+        'id',
+        'name',
+        'created_at',
+        'updated_at'
+    ];
+
     public function setUp(): void
     {
         parent::setUp();
@@ -21,29 +28,27 @@ class CategoryTest extends TestCase
     {
         Category::factory()->create();
 
-        $response = $this->get('/api/categoty');
-
-        $response->status(200);
-
-        $this->assertEquals(200, $response->getStatusCode());
-
+        $response = $this->get('/api/categoty')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                self::CATEGORY_STRUCTURE,
+            ]);
     }
 
     public function test_single_category()
     {
         $category = Category::factory()->create();
 
-        $response = $this->get("/api/categoty/$category->id");
-
-        $response->status(200);
-
-        $this->assertEquals(200, $response->getStatusCode());
-
+        $response = $this->get("/api/categoty/$category->id")
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'categoty' => self::CATEGORY_STRUCTURE,
+            ]);
     }
 
     public function test_category_not_found()
     {
-        $response = $this->get('/api/categoty/999');
+        $response = $this->get('/api/categoty/9999');
 
         $response->status(404);
 
@@ -60,12 +65,13 @@ class CategoryTest extends TestCase
             ->withHeader('Accept', 'application/json')
             ->post('/api/admin/categoty', [
                 'name' => "Birthday Cake",
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'category' => self::CATEGORY_STRUCTURE,
             ]);
-
-        $response->assertStatus(200);
-
     }
-
 
     public function test_update_category()
     {
@@ -77,9 +83,12 @@ class CategoryTest extends TestCase
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
             ->put("/api/admin/categoty/$category->id", [
-                'name' =>  $this->faker->text(15) . ' Updated',
+                'name' => $this->faker->text(15) . ' Updated',
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                self::CATEGORY_STRUCTURE,
             ]);
-        $response->assertStatus(200);
     }
 
     public function test_update_category_validation()

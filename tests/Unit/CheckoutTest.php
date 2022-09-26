@@ -13,6 +13,21 @@ class CheckoutTest extends TestCase
 {
     use WithFaker;
 
+    const ORDER_STRUCTURE = [
+        "id",
+        "order_number",
+        "user_id",
+        "flat",
+        "street_name",
+        "area",
+        "landmark",
+        "city",
+        "payment_method",
+        "total",
+        "updated_at",
+        "created_at",
+    ];
+
     public function test_cart_checkout()
     {
         $this->loginUser();
@@ -37,9 +52,12 @@ class CheckoutTest extends TestCase
                 'city' => $this->faker->city,
                 'payment_method' => 'cash_on_delivery',
                 'qty' => $this->faker->numberBetween(10, 20),
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'order' => self::ORDER_STRUCTURE
             ]);
-
-        $response->assertStatus(200);
     }
 
     public function test_single_product_checkout()
@@ -59,9 +77,12 @@ class CheckoutTest extends TestCase
                 'city' => $this->faker->city,
                 'payment_method' => 'cash_on_delivery',
                 'qty' => $this->faker->numberBetween(10, 20),
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'order' => self::ORDER_STRUCTURE
             ]);
-
-        $response->assertStatus(200);
     }
 
     public function test_cancel_order()
@@ -120,8 +141,11 @@ class CheckoutTest extends TestCase
             'qty' => $this->faker->numberBetween(10, 20),
         ]);
 
-        $response = $this->get("api/order/search/$order->order_number");
-        $response->assertStatus(200);
+        $response = $this->get("api/order/search/$order->order_number")
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                self::ORDER_STRUCTURE
+            ]);
     }
 
     public function test_my_order_download()

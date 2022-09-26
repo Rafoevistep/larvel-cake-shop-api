@@ -13,6 +13,23 @@ class OrderControllerAdminTest extends TestCase
     //Admin Test Change Order status
     use WithFaker;
 
+    const ORDER_STRUCTURE = [
+        "id",
+        "order_number",
+        "user_id",
+        "status",
+        "is_paid",
+        "payment_method",
+        "total",
+        "flat",
+        "street_name",
+        "area",
+        "landmark",
+        "city",
+        "created_at",
+        "updated_at"
+    ];
+
     public function order_create()
     {
         $user = $this->loginAdmin();
@@ -77,9 +94,12 @@ class OrderControllerAdminTest extends TestCase
             ->withHeader('Accept', 'application/json')
             ->put("api/admin/checkout/$orderId", [
                 'status' => 'completed',
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'order' => self::ORDER_STRUCTURE,
             ]);
-
-        $response->assertStatus(200);
     }
 
     public function test_admin_change_order_status_cancelled()
@@ -92,9 +112,12 @@ class OrderControllerAdminTest extends TestCase
             ->withHeader('Accept', 'application/json')
             ->put("api/admin/checkout/$orderId", [
                 'status' => 'cancelled',
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'order' => self::ORDER_STRUCTURE,
             ]);
-
-        $response->assertStatus(200);
     }
 
     public function test_admin_change_order_status_being_prepeared()
@@ -109,9 +132,12 @@ class OrderControllerAdminTest extends TestCase
             ->withHeader('Accept', 'application/json')
             ->put("api/admin/checkout/$orderId", [
                 'status' => 'being_prepeared',
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'order' => self::ORDER_STRUCTURE,
             ]);
-
-        $response->assertStatus(200);
     }
 
     public function test_admin_change_order_status_pickup()
@@ -126,9 +152,12 @@ class OrderControllerAdminTest extends TestCase
             ->withHeader('Accept', 'application/json')
             ->put("api/admin/checkout/$orderId", [
                 'status' => 'pickup',
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'order' => self::ORDER_STRUCTURE,
             ]);
-
-        $response->assertStatus(200);
     }
 
     public function test_admin_change_order_status_deleveried()
@@ -142,9 +171,12 @@ class OrderControllerAdminTest extends TestCase
             ->withHeader('Accept', 'application/json')
             ->put("api/admin/checkout/$orderId", [
                 'status' => 'deleveried',
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'order' => self::ORDER_STRUCTURE,
             ]);
-
-        $response->assertStatus(200);
     }
 
     public function test_admin_get_all_orders()
@@ -154,9 +186,13 @@ class OrderControllerAdminTest extends TestCase
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->get('api/admin/checkout');
-
-        $response->assertStatus(200);
+            ->get('api/admin/checkout')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'total' => [
+                    '*' => self::ORDER_STRUCTURE
+                ],
+            ]);
 
     }
 
@@ -167,9 +203,31 @@ class OrderControllerAdminTest extends TestCase
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->get("api/admin/checkout/$orderId");
+            ->get("api/admin/checkout/$orderId")
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'order' => self::ORDER_STRUCTURE,
+                'product' => [
+                    '*' => [
+                        "id",
+                        "order_id",
+                        "product_id",
+                        "qty",
+                        "created_at",
+                        "updated_at",
 
-        $response->assertStatus(200);
-
+                        'product' => [
+                            "id",
+                            "name",
+                            "description",
+                            "price",
+                            "image",
+                            "category_id",
+                            "created_at",
+                            "updated_at",
+                        ]
+                    ]
+                ]
+            ]);
     }
 }

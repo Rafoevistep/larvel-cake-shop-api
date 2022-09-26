@@ -40,7 +40,7 @@ class EnquiryController extends Controller
             'message' => $request->message
         ]);
 
-        return response()->json(['message' => 'Your Enquiry Successfully Send', $enquiry]);
+        return response()->json(['message' => 'Your Enquiry Successfully Send', 'data' => $enquiry]);
 
     }
 

@@ -2,29 +2,43 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class EnquiriesTest extends TestCase
 {
+    const ENQUIRY_STRUCTURE = [
+        "id" ,
+        "user_id",
+        "name",
+        "email",
+        "message",
+        "updated_at",
+        "created_at",
+    ];
+    use  WithFaker;
     public function test_user_write_enquiry()
     {
-        $user = $this->loginUser();
+         $this->loginUser();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
             ->post('api/auth/enquary', [
-                'name' => "user",
-                'email' => 'user@gmail.com',
-                'message' => 'Good Cakes Owr Shop'
+                'name' => $this->faker->firstName,
+                'email' => $this->faker->email,
+                'message' => $this->faker->realTextBetween(11,30)
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'message',
+                'data' => self::ENQUIRY_STRUCTURE
             ]);
-
-        $response->assertStatus(200);
     }
 
     public function test_user_write_enquiry_validation()
     {
-        $user = $this->loginUser();
+        $this->loginUser();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
@@ -40,12 +54,14 @@ class EnquiriesTest extends TestCase
 
     public function test_admin_get_enquiries()
     {
-        $user = $this->loginAdmin();
+        $this->loginAdmin();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
-            ->get('api/admin/enquary');
-
-        $response->assertStatus(200);
+            ->get('api/admin/enquary')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                self::ENQUIRY_STRUCTURE
+            ]);
     }
 }

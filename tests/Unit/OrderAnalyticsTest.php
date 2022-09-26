@@ -6,110 +6,161 @@ use Tests\TestCase;
 
 class OrderAnalyticsTest extends TestCase
 {
-    public function  test_admin_show_total_orders()
+    const ANALYTIC_STRUCTURE = [
+        "id",
+        "order_number",
+        "user_id",
+        "status",
+        "is_paid",
+        "payment_method",
+        "total",
+        "flat",
+        "street_name",
+        "area",
+        "landmark",
+        "city",
+        "created_at",
+        "updated_at"
+    ];
+
+    public function test_admin_show_total_orders()
     {
         $this->loginAdmin();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->get('api/admin/order/alytics/total');
-
-        $response->assertStatus(200);
-
+            ->get('api/admin/order/alytics/total')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "count",
+                "list" => [
+                    "*" => self::ANALYTIC_STRUCTURE
+                ]
+            ]);
     }
 
 
-
-    public function  test_admin_show_not_confirmed()
+    public function test_admin_show_not_confirmed()
     {
         $this->loginAdmin();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->get('api/admin/order/alytics/notconfirmed');
-
-        $response->assertStatus(200);
+            ->get('api/admin/order/alytics/notconfirmed')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "count",
+                "list" => [
+                    "*" => self::ANALYTIC_STRUCTURE
+                ]
+            ]);
 
     }
 
-    public function  test_admin_show_cancelled()
+    public function test_admin_show_cancelled()
     {
         $this->loginAdmin();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->get('api/admin/order/alytics/cancelled');
-
-        $response->assertStatus(200);
+            ->get('api/admin/order/alytics/cancelled')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "count",
+                "list" => [
+                    "*" => self::ANALYTIC_STRUCTURE
+                ]
+            ]);
 
     }
 
-    public function  test_admin_show_completed()
+    public function test_admin_show_completed()
     {
         $this->loginAdmin();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->get('api/admin/order/alytics/completed');
-
-        $response->assertStatus(200);
+            ->get('api/admin/order/alytics/completed')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "count",
+                "list" => [
+                    "*" => self::ANALYTIC_STRUCTURE
+                ]
+            ]);
 
     }
 
-    public function  test_admin_show_total_prepeared()
+    public function test_admin_show_total_prepeared()
     {
         $this->loginAdmin();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->get('api/admin/order/alytics/prepeared');
-
-        $response->assertStatus(200);
-
+            ->get('api/admin/order/alytics/prepeared')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "count",
+                "list" => [
+                    "*" => self::ANALYTIC_STRUCTURE
+                ]
+            ]);
     }
 
-    public function  test_admin_show_pickup()
+    public function test_admin_show_pickup()
     {
         $this->loginAdmin();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->get('api/admin/order/alytics/pickup');
-
-        $response->assertStatus(200);
-
+            ->get('api/admin/order/alytics/pickup')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "count",
+                "list" => [
+                    "*" => self::ANALYTIC_STRUCTURE
+                ]
+            ]);
     }
 
-    public function  test_admin_show_deleveried()
+    public function test_admin_show_deleveried()
     {
         $this->loginAdmin();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->get('api/admin/order/alytics/deleveried');
-
-        $response->assertStatus(200);
-
+            ->get('api/admin/order/alytics/deleveried')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "count",
+                "list" => [
+                    "*" => self::ANALYTIC_STRUCTURE
+                ]
+            ]);
     }
 
-    public function  test_admin_show_sales()
+    public function test_admin_show_sales()
     {
         $this->loginAdmin();
 
         $response = $this
             ->withHeader('Authorization', 'Bearer ' . $this->authToken)
             ->withHeader('Accept', 'application/json')
-            ->get('api/admin/order/alytics/deleveried');
-
-        $response->assertStatus(200);
-
+            ->get('api/admin/order/alytics/deleveried')
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                "count",
+                "list" => [
+                    "*" => self::ANALYTIC_STRUCTURE
+                ]
+            ]);
     }
 
 }

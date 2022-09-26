@@ -8,6 +8,8 @@ class AuthTest extends TestCase
 {
     use \Tests\CreatesApplication;
 
+
+
     public function setUp(): void
     {
         parent::setUp();
@@ -26,6 +28,7 @@ class AuthTest extends TestCase
             ->assertJsonStructure(['token']);
 
         $response->assertStatus(200);
+
     }
 
 

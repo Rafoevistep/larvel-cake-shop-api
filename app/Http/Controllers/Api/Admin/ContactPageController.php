@@ -35,12 +35,10 @@ class ContactPageController extends Controller
             'email' => $request->email,
         ]);
 
-        if ($contact == null) {
+
             // Return Json Response
             return response()->json($contact, 200);
-        } else {
-            return response()->json(['message' => 'You have already added Information in Contact Page']);
-        }
+
 
     }
 

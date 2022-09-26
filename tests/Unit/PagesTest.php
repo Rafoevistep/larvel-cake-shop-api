@@ -9,6 +9,18 @@ class PagesTest extends TestCase
 {
     use WithFaker;
 
+    const ABOUT_STRUCTURE = [
+        "id",
+        "name",
+        "description",
+        "created_at",
+        "updated_at"
+    ];
+
+    const CONTACT_STRUCTURE = [
+
+    ];
+
     public function test_create_about_page()
     {
         $user = $this->loginAdmin();
@@ -19,10 +31,9 @@ class PagesTest extends TestCase
             ->post('api/admin/about', [
                 'name' => $this->faker->realTextBetween(10,20),
                 'description' => $this->faker->realTextBetween(20,50),
-            ]);
-
-        $response->assertStatus(200);
-
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure(self::ABOUT_STRUCTURE);
     }
 
     public function test_create_about_page_validation_empty_fields()
@@ -43,10 +54,9 @@ class PagesTest extends TestCase
 
     public function test_get_about_page()
     {
-        $response = $this->get('api/about');
-
-        $response->assertStatus(200);
-
+        $response = $this->get('api/about')
+            ->assertStatus(200)
+            ->assertJsonStructure(self::ABOUT_STRUCTURE);
     }
 
     public function test_create_contact_page()
@@ -60,10 +70,9 @@ class PagesTest extends TestCase
                 'address' => $this->faker->address,
                 'phone' => $this->faker->phoneNumber,
                 'email' => $this->faker->email,
-            ]);
-
-        $response->assertStatus(200);
-
+            ])
+            ->assertStatus(200)
+            ->assertJsonStructure(self::CONTACT_STRUCTURE);
     }
 
     public function test_create_contact_page_validation()
@@ -85,10 +94,8 @@ class PagesTest extends TestCase
 
     public function test_get_contact_page()
     {
-        $response = $this->get('api/contact');
-
-        $response->assertStatus(200);
-
+        $response = $this->get('api/contact')
+            ->assertStatus(200)
+            ->assertJsonStructure(self::CONTACT_STRUCTURE);
     }
-
 }
