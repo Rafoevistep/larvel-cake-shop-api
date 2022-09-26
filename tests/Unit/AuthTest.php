@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Capsule\Manager as DB;
+use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
@@ -9,6 +11,7 @@ class AuthTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->assertTrue(TRUE);
     }
 

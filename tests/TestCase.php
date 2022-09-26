@@ -5,39 +5,14 @@ namespace Tests;
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Queue\Capsule\Manager;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Database\Capsule\Manager as DB;
 
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
-
-//
-//    /**
-//     * Creates the application.
-//     *
-//     * @return \Illuminate\Foundation\Application
-//     */
-//    public function createApplication()
-//    {
-//        $app = require __DIR__.'/../bootstrap/app.php';
-//
-//        $app->make(Kernel::class)->bootstrap();
-//
-//        $this->clearCache(); // NEW LINE -- Testing doesn't work properly with cached stuff.
-//
-//        return $app;
-//    }
-//
-//    /**
-//     * Clears Laravel Cache.
-//     */
-//    protected function clearCache()
-//    {
-//        $commands = ['clear-compiled', 'cache:clear', 'optimize', 'view:clear', 'config:clear', 'route:clear','config:cache'];
-//        foreach ($commands as $command) {
-//            \Illuminate\Support\Facades\Artisan::call($command);
-//        }
-//    }
 
 
     public $authToken;
@@ -50,6 +25,7 @@ abstract class TestCase extends BaseTestCase
 
         $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
 
+        Config::set('testing', true);
     }
 
     public function loginAdmin()
